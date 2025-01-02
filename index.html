@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cap & Stem Challenge</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase CDN Links -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
+</head>
+<body>
+    <div id="login">
+        <button onclick="login()">Log in with Google</button>
+    </div>
+    <div id="game" style="display:none;">
+        <h1>Cap & Stem Challenge</h1>
+        <img id="mushroom-image" src="" alt="Mushroom Image">
+        <input type="text" id="genus" placeholder="Genus">
+        <input type="text" id="species" placeholder="Species">
+        <button onclick="submitGuess()">Submit Guess</button>
+        <p id="result"></p>
+        <button onclick="uploadForm()">Upload Mushroom</button>
+        <div id="upload-section" style="display:none;">
+            <input type="file" id="imageUpload">
+            <select id="partType">
+                <option value="cap">Cap</option>
+                <option value="stem">Stem</option>
+            </select>
+            <input type="text" id="uploadGenus" placeholder="Genus">
+            <input type="text" id="uploadSpecies" placeholder="Species">
+            <button onclick="uploadMushroom()">Upload</button>
+        </div>
+    </div>
+
+    <!-- Initialize Firebase App and Attach Functions -->
+    <script src="app.js"></script>
+    <!-- Add Firebase CDN (Non-Module) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js"></script>
+
+</body>
+</html>
