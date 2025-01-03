@@ -7,19 +7,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
+    <div class="container">
         <h1>Leaderboard</h1>
-    </div>
-
-    <div id="leaderboard-container">
-        <h2>Top Players</h2>
         <ul id="leaderboard"></ul>
+        <button onclick="goBack()">Back to Game</button>
     </div>
-
-    <a href="index.html">Back to Game</a>
 
     <script type="module" src="./firebase.js"></script>
-    <script type="module" src="./leaderboard.js"></script>
+    <script type="module" src="./app.js"></script>
+    <script>
+        import { loadLeaderboard } from './app.js';
+        window.onload = loadLeaderboard;
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+    </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 import { auth, provider, db } from './firebase.js';
 import { signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 let currentMushroom;
 let score = 0;
@@ -38,21 +38,57 @@ export async function loadRandomMushroom() {
 }
 
 // Handle Guess Submission
-export function submitGuess() {
+export async function submitGuess() {
     const genus = document.getElementById("genus").value.toLowerCase();
     const species = document.getElementById("species").value.toLowerCase();
 
-    if (genus === currentMushroom.genus.toLowerCase() && species === currentMushroom.species.toLowerCase()) {
-        score += getPoints();
-        document.getElementById("result").innerText = `Correct! +${getPoints()} Points`;
+    if (currentMushroom &&
+        genus === currentMushroom.genus.toLowerCase() &&
+        species === currentMushroom.species.toLowerCase()) {
+        
+        const points = getPoints();
+        score += points;
+        document.getElementById("result").innerText = `Correct! +${points} Points`;
     } else {
         score--;
         document.getElementById("result").innerText = "Incorrect. -1 Point";
     }
     document.getElementById("score").innerText = score;
+
+    // Save score to Firestore if user is logged in
+    if (auth.currentUser) {
+        const user = auth.currentUser;
+
+        await addDoc(collection(db, "scores"), {
+            uid: user.uid,
+            email: user.email,
+            score: score,
+            submittedAt: new Date()
+        });
+    } else {
+        console.warn("No user logged in. Score not saved.");
+    }
+
     loadRandomMushroom();
 }
 
+// Fetch and Display Leaderboard (Top 50)
+export async function loadLeaderboard() {
+    const leaderboardContainer = document.getElementById("leaderboard");
+    leaderboardContainer.innerHTML = ''; // Clear existing list
+
+    const q = query(collection(db, "scores"), orderBy("score", "desc"), limit(50));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const listItem = document.createElement("li");
+        listItem.innerText = `${data.email}: ${data.score} points`;
+        leaderboardContainer.appendChild(listItem);
+    });
+}
+
+// Determine Points Based on Difficulty
 function getPoints() {
     const difficulty = document.getElementById("difficulty").value;
     switch (difficulty) {
@@ -67,4 +103,10 @@ function getPoints() {
     }
 }
 
+// Load leaderboard on leaderboard.html
+if (window.location.pathname.includes('leaderboard.html')) {
+    loadLeaderboard();
+}
+
+// Initial Mushroom Load
 window.onload = loadRandomMushroom;
