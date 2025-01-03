@@ -45,7 +45,7 @@ async function fetchUserScore() {
     document.getElementById("score").innerText = score;
 }
 
-// Load Random Mushroom Based on Dropdown (Filtered by Difficulty)
+// Load Random Mushroom Based on Difficulty
 export async function loadRandomMushroom() {
     const difficulty = document.getElementById("difficulty").value;
     
@@ -53,7 +53,7 @@ export async function loadRandomMushroom() {
         let mushroomQuery;
         
         if (difficulty === "random") {
-            mushroomQuery = collection(db, "mushrooms"); // No filter for random
+            mushroomQuery = collection(db, "mushrooms");  // No filter for random
         } else {
             mushroomQuery = query(
                 collection(db, "mushrooms"),
@@ -83,7 +83,7 @@ export async function submitGuess() {
     const species = document.getElementById("species").value.toLowerCase();
 
     if (genus === currentMushroom.genus.toLowerCase() && species === currentMushroom.species.toLowerCase()) {
-        const points = currentMushroom.points || 1;  // Fetch points from mushroom data
+        const points = getPoints();
         score += points;
         document.getElementById("result").innerText = `Correct! +${points} Points`;
         
@@ -99,7 +99,6 @@ export async function submitGuess() {
         document.getElementById("score").innerText = score;
         await updateUserScore(-1);
     }
-    document.getElementById("score").innerText = score;
 }
 
 // Update User Score in Firestore
@@ -134,9 +133,9 @@ async function updateUserScore(points) {
     }
 }
 
-// Calculate Points Based on Mushroom Upload (Only Used During Upload)
-export function getPoints(difficulty) {
-    switch (difficulty) {
+// Update point calculation based on mushroom difficulty
+function getPoints() {
+    switch (currentMushroom.difficulty) {
         case "easy":
             return 1;
         case "medium":
@@ -144,7 +143,7 @@ export function getPoints(difficulty) {
         case "hard":
             return 10;
         default:
-            return 1;  // Default for random
+            return 1; // Fallback to 1 point if no difficulty
     }
 }
 
