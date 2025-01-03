@@ -32,14 +32,12 @@ window.addEventListener('DOMContentLoaded', () => {
         const gameContainer = document.getElementById('game-container');
 
         if (user) {
-            // User is logged in
             document.getElementById('user-photo').src = user.photoURL || './default-user.png';
             document.getElementById('user-name').textContent = user.displayName || 'Guest';
             userInfoDiv.style.display = 'flex';
-            gameContainer.style.display = 'block';  // Show game after login
+            gameContainer.style.display = 'block';
             if (loginSection) loginSection.style.display = 'none';
         } else {
-            // User is not logged in
             userInfoDiv.style.display = 'none';
             gameContainer.style.display = 'none';
             if (loginSection) loginSection.style.display = 'block';
@@ -47,7 +45,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Google Login Function
+// Google Login
 window.login = function () {
     signInWithPopup(auth, provider)
     .then((result) => {
@@ -56,23 +54,19 @@ window.login = function () {
         document.getElementById('user-name').textContent = user.displayName;
         document.getElementById('user-info').style.display = 'flex';
         document.getElementById('game-container').style.display = 'block';
-        if (document.getElementById('login-section')) {
-            document.getElementById('login-section').style.display = 'none';
-        }
     }).catch((error) => {
         console.error("Login failed:", error);
     });
-}
+};
 
-// Logout Function
+// Logout
 window.logout = function () {
     signOut(auth).then(() => {
         alert("Logged out successfully!");
-        window.location.href = 'index.html';  // Redirect to home page
+        window.location.href = 'index.html';
     }).catch((error) => {
         console.error("Logout failed:", error);
     });
-}
+};
 
-// Export for Use in Other Files
 export { auth, provider, db, storage };

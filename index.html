@@ -9,65 +9,26 @@
 <body>
     <div class="header">
         <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
-        <h1>Cap & Stem Challenge</h1>
     </div>
 
-    <!-- User Info (Hidden Until Login) -->
     <div id="user-info" class="user-info" style="display: none;">
         <img id="user-photo" src="" alt="User Photo" class="user-photo">
         <span id="user-name"></span>
         <button onclick="logout()">Logout</button>
     </div>
 
-    <!-- Show Login Button if Not Authenticated -->
-    <div id="login-section" style="text-align: center; margin-top: 30px; display: none;">
+    <div id="login-section" style="text-align: center;">
         <button onclick="login()">Log in with Google</button>
     </div>
 
-    <!-- Score Section -->
-    <div id="game-container">
-        <h1>Cap & Stem Challenge</h1>
-        <h2>Current Score: <span id="score">0</span></h2>
-    
-        <label for="difficultyFilter">Select Difficulty:</label>
-        <select id="difficultyFilter">
-            <option value="random">Random</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="difficult">Difficult</option>
-        </select>
-    
+    <div id="game-container" style="display:none;">
         <img id="mushroom-image" src="" alt="Mushroom Image">
         <input type="text" id="genus" placeholder="Genus">
         <input type="text" id="species" placeholder="Species">
         <button onclick="submitGuess()">Submit Guess</button>
-        <p id="result"></p>
-    
-        <div>
-            <button onclick="goToUpload()">Upload your own Stem/Cap photo</button>
-            <button onclick="goToLeaderboard()">View Leaderboard</button>
-        </div>
-    </div>
-    
-    
-
-        <div>
-            <button onclick="goToUpload()">Upload your own Stem/Cap photo</button>
-            <button onclick="goToLeaderboard()">View Leaderboard</button>
-        </div>
     </div>
 
     <script type="module" src="./firebase.js"></script>
     <script type="module" src="./app.js"></script>
-
-    <script>
-        function goToUpload() {
-            window.location.href = "upload.html";
-        }
-
-        function goToLeaderboard() {
-            window.location.href = "leaderboard.html";
-        }
-    </script>
 </body>
 </html>
