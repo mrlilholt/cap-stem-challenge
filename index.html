@@ -9,6 +9,11 @@
 <body>
     <div class="header">
         <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
+        <div class="nav">
+            <a href="index.html">Home</a>
+            <a href="upload.html">Upload</a>
+            <a href="leaderboard.html">Leaderboard</a>
+        </div>
     </div>
 
     <div id="user-info" class="user-info" style="display: none;">
@@ -22,6 +27,16 @@
     </div>
 
     <div id="game-container" style="display:none;">
+        <h2>Current Score: <span id="score">0</span></h2>
+        <div>
+            <label for="difficulty">Select Difficulty:</label>
+            <select id="difficulty">
+                <option value="random">Random</option>
+                <option value="easy">Easy (1 point)</option>
+                <option value="medium">Medium (5 points)</option>
+                <option value="hard">Hard (10 points)</option>
+            </select>
+        </div>
         <img id="mushroom-image" src="" alt="Mushroom Image">
         <input type="text" id="genus" placeholder="Genus">
         <input type="text" id="species" placeholder="Species">
