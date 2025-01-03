@@ -1,3 +1,13 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const timerElement = document.getElementById("timer");
+    if (timerElement) {
+        timerElement.addEventListener("click", () => {
+            console.log("Timer clicked");
+        });
+    }
+});
+
+
 const timerElement = document.querySelector('#timer');
 if (timerElement) {
   timerElement.addEventListener('click', startTimer);

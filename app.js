@@ -1,11 +1,11 @@
-// Firebase references (No imports needed)
+// Use the globally defined firebase object (from UMD CDN)
 const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 const analytics = firebase.analytics();
 
 // Google Login
-export function login() {
+function login() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider)
     .then((result) => {
@@ -16,9 +16,10 @@ export function login() {
         console.error("Login failed:", error);
     });
 }
+window.login = login;
 
 // Upload Mushroom to Firestore and Storage
-export function uploadMushroom() {
+function uploadMushroom() {
     const file = document.getElementById("imageUpload").files[0];
     const partType = document.getElementById("partType").value;
     const genus = document.getElementById("uploadGenus").value;
@@ -46,11 +47,12 @@ export function uploadMushroom() {
         console.error("Upload failed:", error);
     });
 }
+window.uploadMushroom = uploadMushroom;
 
 // Load Random Mushroom for Guessing
 let currentMushroom;
 
-export function loadRandomMushroom() {
+function loadRandomMushroom() {
     db.collection("mushrooms").get().then((snapshot) => {
         const mushrooms = snapshot.docs.map(doc => doc.data());
         if (mushrooms.length > 0) {
@@ -61,9 +63,10 @@ export function loadRandomMushroom() {
         }
     });
 }
+window.onload = loadRandomMushroom;
 
 // Submit Guess for Mushroom
-export function submitGuess() {
+function submitGuess() {
     const genus = document.getElementById("genus").value.toLowerCase();
     const species = document.getElementById("species").value.toLowerCase();
 
@@ -74,3 +77,4 @@ export function submitGuess() {
     }
     loadRandomMushroom();
 }
+window.submitGuess = submitGuess;
