@@ -9,6 +9,7 @@ window.uploadMushroom = async function () {
     const partType = document.getElementById('partType').value;
     const genus = document.getElementById('uploadGenus').value;
     const species = document.getElementById('uploadSpecies').value;
+    const difficulty = document.getElementById("difficulty").value;
 
     if (!file || !genus || !species) {
         alert("Please fill in all fields.");
@@ -36,6 +37,7 @@ window.uploadMushroom = async function () {
                 partType,
                 genus,
                 species,
+                difficulty,
                 uploadedAt: new Date()
             });
 
