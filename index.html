@@ -82,13 +82,6 @@
 </head>
 <body>
     <div class="container">
-        <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
-
-        <div class="user-info">
-            <img id="user-photo" src="" alt="User Photo" class="user-photo">
-            <span id="user-name"></span>
-        </div>
-
         <div class="dropdown">
             <button>☰ Menu</button>
             <div class="dropdown-content">
@@ -99,8 +92,14 @@
             </div>
         </div>
 
+        <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
+
         <div id="score-container">
             Current Score: <span id="score">0</span>
+        </div>
+        <div class="user-info">
+            <img id="user-photo" src="" alt="User Photo" class="user-photo">
+            <span id="user-name"></span>
         </div>
 
         <select id="difficulty" onchange="loadRandomMushroom()">
