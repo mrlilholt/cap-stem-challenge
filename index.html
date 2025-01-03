@@ -7,20 +7,39 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="login">
-        <button onclick="login()">Log in with Google</button>
-    </div>
-    <div id="game" style="display:none;">
+    <div class="header">
+        <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
         <h1>Cap & Stem Challenge</h1>
+    </div>
+
+    <div id="score-container">
+        <h2>Current Score: <span id="score">0</span></h2>
+    </div>
+
+    <div id="game-container">
         <img id="mushroom-image" src="" alt="Mushroom Image">
         <input type="text" id="genus" placeholder="Genus">
         <input type="text" id="species" placeholder="Species">
         <button onclick="submitGuess()">Submit Guess</button>
         <p id="result"></p>
+
+        <div>
+            <button onclick="goToUpload()">Upload your own Stem/Cap photo</button>
+            <button onclick="goToLeaderboard()">View Leaderboard</button>
+        </div>
     </div>
 
-    <!-- Firebase App Initialization -->
     <script type="module" src="./firebase.js"></script>
     <script type="module" src="./app.js"></script>
+
+    <script>
+        function goToUpload() {
+            window.location.href = "upload.html";
+        }
+
+        function goToLeaderboard() {
+            window.location.href = "leaderboard.html";
+        }
+    </script>
 </body>
 </html>

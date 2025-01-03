@@ -47,7 +47,10 @@ export function uploadMushroom() {
 }
 
 // Load Random Mushroom for Guessing
+import { db } from './firebase.js';
+
 let currentMushroom;
+let score = 0;
 
 export function loadRandomMushroom() {
     db.collection("mushrooms").get().then((snapshot) => {
@@ -61,15 +64,33 @@ export function loadRandomMushroom() {
     });
 }
 
-// Submit Guess for Mushroom
 export function submitGuess() {
     const genus = document.getElementById("genus").value.toLowerCase();
     const species = document.getElementById("species").value.toLowerCase();
 
     if (genus === currentMushroom.genus.toLowerCase() && species === currentMushroom.species.toLowerCase()) {
+        score++;
         document.getElementById("result").innerText = "Correct! +1 Point";
     } else {
+        score--;
         document.getElementById("result").innerText = "Incorrect. -1 Point";
     }
+    document.getElementById("score").innerText = score;
     loadRandomMushroom();
 }
+
+// Store Score in Firestore
+export function saveScore(username) {
+    db.collection("scores").add({
+        username,
+        score,
+        submittedAt: new Date()
+    }).then(() => {
+        console.log("Score saved!");
+    }).catch((error) => {
+        console.error("Failed to save score:", error);
+    });
+}
+
+window.onload = loadRandomMushroom;
+
