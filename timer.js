@@ -7,12 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
-const timerElement = document.querySelector('#timer');
-if (timerElement) {
-  timerElement.addEventListener('click', startTimer);
-}
-
 export const startTimer = (callback, duration) => {
   let timer = duration;
   const interval = setInterval(() => {
