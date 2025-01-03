@@ -88,7 +88,10 @@
 </head>
 <body>
     <div class="container">
+        <!-- Menu Button -->
         <button class="menu-btn" onclick="toggleDropdown()">☰</button>
+        
+        <!-- Dropdown Menu -->
         <div class="dropdown" id="menuDropdown">
             <a href="index.html">Home</a>
             <a href="upload.html">Upload</a>
@@ -96,27 +99,24 @@
             <a href="#" onclick="logout()">Logout</a>
         </div>
 
+        <!-- Logo -->
         <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
 
+        <!-- User Info -->
         <div class="user-info">
             <img id="user-photo" src="" alt="User Photo" class="user-photo">
             <span id="user-name"></span>
-            <div class="menu-icon">
-                <button onclick="toggleMenu()">☰ Menu</button>
-                <div id="dropdownMenu" class="dropdown-content">
-                    <a href="index.html">Home</a>
-                    <a href="upload.html">Upload</a>
-                    <a href="leaderboard.html">Leaderboard</a>
-                    <a href="#" onclick="logout()">Logout</a>
-                </div>
-            </div>
+        </div>  <!-- Closing this div here is essential! -->
 
+        <!-- Score -->
         <div id="score-container">
             Current Score: <span id="score">0</span>
         </div>
 
+        <!-- Mushroom Image -->
         <img id="mushroom-image" src="" alt="Mushroom Image">
 
+        <!-- Difficulty Selector -->
         <select id="difficulty" onchange="loadRandomMushroom()">
             <option value="random">Random</option>
             <option value="easy">Easy</option>
@@ -124,21 +124,29 @@
             <option value="hard">Hard</option>
         </select>
 
+        <!-- Genus and Species Inputs -->
         <input type="text" id="genus" placeholder="Genus">
         <input type="text" id="species" placeholder="Species">
+        
+        <!-- Submit Button -->
         <button onclick="submitGuess()">Submit Guess</button>
+
+        <!-- Result Display -->
         <p id="result"></p>
     </div>
 
+    <!-- Firebase and App Scripts -->
     <script type="module" src="./firebase.js"></script>
     <script type="module" src="./app.js"></script>
 
     <script>
+        // Toggle Menu Dropdown
         function toggleDropdown() {
             const dropdown = document.getElementById('menuDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
 
+        // Logout Handler
         function logout() {
             window.logout();
         }
