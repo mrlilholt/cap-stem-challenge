@@ -1,7 +1,7 @@
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;  /* Apply Poppins globally */
 }
 
 .container {
@@ -12,7 +12,6 @@ body, html {
     border-radius: 10px;
     text-align: center;
     position: relative;
-    z-index: 1;
 }
 
 .logo {
@@ -29,7 +28,6 @@ body, html {
     border: none;
     background: none;
     cursor: pointer;
-    z-index: 100;
 }
 
 .dropdown {
@@ -40,7 +38,7 @@ body, html {
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    z-index: 101;
+    z-index: 10;
 }
 
 .dropdown a {
@@ -68,6 +66,20 @@ body, html {
     margin-right: 10px;
 }
 
+#score-container {
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#divider {
+    margin: 30px auto;
+    border: none;
+    border-top: 2px solid #ddd;
+    width: 80%;
+    display: block;
+}
+
 #mushroom-image {
     width: 250px;
     height: 250px;
@@ -76,7 +88,7 @@ body, html {
     margin: 20px 0;
 }
 
-input, button {
+select, input, button {
     margin: 10px 5px;
     padding: 10px;
     font-size: 16px;
@@ -84,24 +96,6 @@ input, button {
     max-width: 300px;
 }
 
-select {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding: 10px;
-    font-size: 16px;
-    width: calc(100% - 40px);
-    max-width: 300px;
+button {
+    font-weight: 600;
 }
-
-#score-container {
-    margin: 20px 0;
-    font-size: 24px;
-    font-weight: bold;
-}
-.divider {
-    margin: 30px 0;
-    border: none;
-    border-top: 2px solid #ddd;
-    width: 80%;
-}
-
