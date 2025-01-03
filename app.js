@@ -31,7 +31,7 @@ export { auth, provider, db, storage };
 
 // Google Login
 export function login() {
-    signInWithPopup(auth, provider)
+    signInWithPopup(auth, provider)  // Proper modular call
     .then((result) => {
         document.getElementById("login").style.display = "none";
         document.getElementById("game").style.display = "block";
