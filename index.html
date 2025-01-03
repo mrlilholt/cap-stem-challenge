@@ -5,45 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cap & Stem Challenge</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+        .user-info {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .user-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 5px;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a {
+            padding: 10px 15px;
+            display: block;
+            text-decoration: none;
+            color: black;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        #mushroom-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        select, input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #score-container {
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <div class="header">
+    <div class="container">
         <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
-        <div class="nav">
-            <a href="index.html">Home</a>
-            <a href="upload.html">Upload</a>
-            <a href="leaderboard.html">Leaderboard</a>
+
+        <div class="user-info">
+            <img id="user-photo" src="" alt="User Photo" class="user-photo">
+            <span id="user-name"></span>
         </div>
-    </div>
 
-    <div id="user-info" class="user-info" style="display: none;">
-        <img id="user-photo" src="" alt="User Photo" class="user-photo">
-        <span id="user-name"></span>
-        <button onclick="logout()">Logout</button>
-    </div>
-
-    <div id="login-section" style="text-align: center;">
-        <button onclick="login()">Log in with Google</button>
-    </div>
-
-    <div id="game-container" style="display:none;">
-        <h2>Current Score: <span id="score">0</span></h2>
-        <div>
-            <label for="difficulty">Select Difficulty:</label>
-            <select id="difficulty">
-                <option value="random">Random</option>
-                <option value="easy">Easy (1 point)</option>
-                <option value="medium">Medium (5 points)</option>
-                <option value="hard">Hard (10 points)</option>
-            </select>
+        <div class="dropdown">
+            <button>☰ Menu</button>
+            <div class="dropdown-content">
+                <a href="index.html">Home</a>
+                <a href="upload.html">Upload</a>
+                <a href="leaderboard.html">Leaderboard</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
         </div>
+
+        <div id="score-container">
+            Current Score: <span id="score">0</span>
+        </div>
+
+        <select id="difficulty" onchange="loadRandomMushroom()">
+            <option value="random">Random</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+
         <img id="mushroom-image" src="" alt="Mushroom Image">
-        <input type="text" id="genus" placeholder="Genus">
-        <input type="text" id="species" placeholder="Species">
-        <button onclick="submitGuess()">Submit Guess</button>
+        <div>
+            <input type="text" id="genus" placeholder="Genus">
+            <input type="text" id="species" placeholder="Species">
+            <button onclick="submitGuess()">Submit Guess</button>
+        </div>
     </div>
 
     <script type="module" src="./firebase.js"></script>
     <script type="module" src="./app.js"></script>
+    <script>
+        function logout() {
+            window.logout();
+        }
+    </script>
 </body>
 </html>
