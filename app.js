@@ -1,6 +1,6 @@
 import { auth, provider, db } from './firebase.js';
-import { signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { collection, getDocs, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 let currentMushroom;
 let score = 0;
@@ -8,17 +8,44 @@ let score = 0;
 // Google Login
 export function login() {
     signInWithPopup(auth, provider)
-    .then(() => {
-        document.getElementById("login").style.display = "none";
-        document.getElementById("game").style.display = "block";
-    }).catch((error) => {
-        console.error("Login failed:", error);
-    });
+        .then(() => {
+            document.getElementById("login").style.display = "none";
+            document.getElementById("game").style.display = "block";
+            fetchUserScore();
+        })
+        .catch((error) => {
+            console.error("Login failed:", error);
+        });
 }
 
 window.login = login;
 
-// Load Random Mushroom (with Cloudinary URLs)
+// Display User Info
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        document.getElementById("user-photo").src = user.photoURL;
+        document.getElementById("user-name").textContent = user.displayName;
+        fetchUserScore();
+    }
+});
+
+// Fetch and Set User Score from Firestore
+async function fetchUserScore() {
+    if (!auth.currentUser) return;
+
+    const userScoreRef = doc(db, "scores", auth.currentUser.uid);
+    const userScoreSnap = await getDoc(userScoreRef);
+
+    if (userScoreSnap.exists()) {
+        score = userScoreSnap.data().score;
+    } else {
+        await setDoc(userScoreRef, { score: 0 });
+        score = 0;
+    }
+    document.getElementById("score").innerText = score;
+}
+
+// Load Random Mushroom (Cloudinary)
 export async function loadRandomMushroom() {
     try {
         const snapshot = await getDocs(collection(db, "mushrooms"));
@@ -42,53 +69,31 @@ export async function submitGuess() {
     const genus = document.getElementById("genus").value.toLowerCase();
     const species = document.getElementById("species").value.toLowerCase();
 
-    if (currentMushroom &&
-        genus === currentMushroom.genus.toLowerCase() &&
-        species === currentMushroom.species.toLowerCase()) {
-        
-        const points = getPoints();
-        score += points;
-        document.getElementById("result").innerText = `Correct! +${points} Points`;
+    if (genus === currentMushroom.genus.toLowerCase() && species === currentMushroom.species.toLowerCase()) {
+        score += getPoints();
+        document.getElementById("result").innerText = `Correct! +${getPoints()} Points`;
     } else {
         score--;
         document.getElementById("result").innerText = "Incorrect. -1 Point";
     }
+
     document.getElementById("score").innerText = score;
-
-    // Save score to Firestore if user is logged in
-    if (auth.currentUser) {
-        const user = auth.currentUser;
-
-        await addDoc(collection(db, "scores"), {
-            uid: user.uid,
-            email: user.email,
-            score: score,
-            submittedAt: new Date()
-        });
-    } else {
-        console.warn("No user logged in. Score not saved.");
-    }
-
+    await updateUserScore();
     loadRandomMushroom();
 }
 
-// Fetch and Display Leaderboard (Top 50)
-export async function loadLeaderboard() {
-    const leaderboardContainer = document.getElementById("leaderboard");
-    leaderboardContainer.innerHTML = ''; // Clear existing list
+// Update User Score in Firestore
+async function updateUserScore() {
+    if (!auth.currentUser) return;
 
-    const q = query(collection(db, "scores"), orderBy("score", "desc"), limit(50));
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const listItem = document.createElement("li");
-        listItem.innerText = `${data.email}: ${data.score} points`;
-        leaderboardContainer.appendChild(listItem);
+    const userScoreRef = doc(db, "scores", auth.currentUser.uid);
+    await updateDoc(userScoreRef, {
+        score: score,
+        submittedAt: new Date()
     });
 }
 
-// Determine Points Based on Difficulty
+// Calculate Points Based on Difficulty
 function getPoints() {
     const difficulty = document.getElementById("difficulty").value;
     switch (difficulty) {
@@ -103,10 +108,5 @@ function getPoints() {
     }
 }
 
-// Load leaderboard on leaderboard.html
-if (window.location.pathname.includes('leaderboard.html')) {
-    loadLeaderboard();
-}
-
-// Initial Mushroom Load
+window.submitGuess = submitGuess;
 window.onload = loadRandomMushroom;
