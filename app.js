@@ -124,11 +124,11 @@ async function updateUserScore(points) {
             submittedAt: new Date()
         });
 
-        // Reflect updated total score in UI
-        score = totalScore;
-        document.getElementById("score").innerText = totalScore;
+        // Immediately update the score in the UI
+        score = totalScore;  // Update the local score variable
+        document.getElementById("score").innerText = score;  // Reflect immediately
 
-        // Log individual submission (for leaderboard)
+        // Log individual submission for leaderboard
         await addDoc(collection(db, "scores"), {
             score: points,
             submittedAt: new Date(),

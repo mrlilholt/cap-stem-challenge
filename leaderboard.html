@@ -8,19 +8,66 @@
 </head>
 <body>
     <div class="container">
+        <!-- Menu Button -->
+        <button class="menu-btn" onclick="toggleDropdown()">☰</button>
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown" id="menuDropdown">
+            <a href="index.html">Home</a>
+            <a href="upload.html">Upload</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+
+        <!-- Logo -->
+        <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
+
+        <!-- User Info -->
+        <div class="user-info">
+            <img id="user-photo" src="" alt="User Photo" class="user-photo">
+            <span id="user-name"></span>
+        </div>  
+
         <h1>Leaderboard</h1>
-        <ul id="leaderboard"></ul>
+
+        <div id="leaderboard-content">
+            <!-- Leaderboard entries will be dynamically populated -->
+        </div>
+
         <button onclick="goBack()">Back to Game</button>
     </div>
 
+    <!-- Firebase and App Scripts -->
     <script type="module" src="./firebase.js"></script>
     <script type="module" src="./app.js"></script>
-    <script>
-        import { loadLeaderboard } from './app.js';
-        window.onload = loadLeaderboard;
 
+    <script>
+        // Toggle Menu Dropdown
+        function toggleDropdown() {
+            const dropdown = document.getElementById('menuDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Simulated Leaderboard Data (replace with actual Firestore fetch)
+        document.addEventListener('DOMContentLoaded', () => {
+            const leaderboard = [
+                { username: 'MushroomHunter42', score: 120 },
+                { username: 'FungiFanatic', score: 95 },
+                { username: 'MycoMaster', score: 80 }
+            ];
+            
+            const leaderboardContent = document.getElementById('leaderboard-content');
+            leaderboard.forEach(entry => {
+                const div = document.createElement('div');
+                div.classList.add('leaderboard-entry');
+                div.innerHTML = `<strong>${entry.username}</strong>: ${entry.score} points`;
+                leaderboardContent.appendChild(div);
+            });
+        });
+
+        // Go back to the main game
         function goBack() {
-            window.location.href = "index.html";
+            window.location.href = 'index.html';
         }
     </script>
 </body>
