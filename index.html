@@ -101,7 +101,15 @@
         <div class="user-info">
             <img id="user-photo" src="" alt="User Photo" class="user-photo">
             <span id="user-name"></span>
-        </div>
+            <div class="menu-icon">
+                <button onclick="toggleMenu()">☰ Menu</button>
+                <div id="dropdownMenu" class="dropdown-content">
+                    <a href="index.html">Home</a>
+                    <a href="upload.html">Upload</a>
+                    <a href="leaderboard.html">Leaderboard</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </div>
+            </div>
 
         <div id="score-container">
             Current Score: <span id="score">0</span>

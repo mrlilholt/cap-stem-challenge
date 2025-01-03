@@ -1,6 +1,6 @@
 import { auth, provider, db } from './firebase.js';
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { collection, getDocs, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 let currentMushroom;
 let score = 0;
@@ -70,27 +70,55 @@ export async function submitGuess() {
     const species = document.getElementById("species").value.toLowerCase();
 
     if (genus === currentMushroom.genus.toLowerCase() && species === currentMushroom.species.toLowerCase()) {
-        score += getPoints();
-        document.getElementById("result").innerText = `Correct! +${getPoints()} Points`;
+        const points = getPoints();
+        score += points;
+        document.getElementById("result").innerText = `Correct! +${points} Points`;
+        
+        // Update Firestore with new score
+        await updateUserScore(points);
+        
+        // Immediately load a new mushroom after correct guess
+        await loadRandomMushroom();
+        
     } else {
         score--;
         document.getElementById("result").innerText = "Incorrect. -1 Point";
+        document.getElementById("score").innerText = score;
+        await updateUserScore(-1);
     }
-
     document.getElementById("score").innerText = score;
-    await updateUserScore();
-    loadRandomMushroom();
 }
 
 // Update User Score in Firestore
-async function updateUserScore() {
+async function updateUserScore(points) {
     if (!auth.currentUser) return;
 
     const userScoreRef = doc(db, "scores", auth.currentUser.uid);
-    await updateDoc(userScoreRef, {
-        score: score,
-        submittedAt: new Date()
-    });
+    
+    try {
+        const userScoreSnap = await getDoc(userScoreRef);
+        if (userScoreSnap.exists()) {
+            await updateDoc(userScoreRef, {
+                score: score,
+                submittedAt: new Date()
+            });
+        } else {
+            await setDoc(userScoreRef, {
+                score: points,
+                submittedAt: new Date()
+            });
+        }
+        
+        // Log the score in the general "scores" collection for leaderboard
+        await addDoc(collection(db, "scores"), {
+            score: points,
+            submittedAt: new Date(),
+            username: auth.currentUser.displayName || "Anonymous"
+        });
+
+    } catch (error) {
+        console.error("Error updating score:", error);
+    }
 }
 
 // Calculate Points Based on Difficulty
