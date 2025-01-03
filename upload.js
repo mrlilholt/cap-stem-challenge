@@ -1,6 +1,6 @@
 import { storage, db } from './firebase.js';
 
-export function uploadMushroom() {
+window.uploadMushroom = function() {
     const file = document.getElementById("imageUpload").files[0];
     const partType = document.getElementById("partType").value;
     const genus = document.getElementById("uploadGenus").value;
@@ -12,6 +12,7 @@ export function uploadMushroom() {
     }
 
     const storageRef = storage.ref(`mushrooms/${partType}/${file.name}`);
+    
     storageRef.put(file).then((snapshot) => {
         snapshot.ref.getDownloadURL().then((downloadURL) => {
             db.collection("mushrooms").add({
@@ -21,7 +22,7 @@ export function uploadMushroom() {
                 species,
                 uploadedAt: new Date()
             }).then(() => {
-                document.getElementById("upload-result").innerText = "Mushroom uploaded successfully!";
+                alert("Mushroom uploaded successfully!");
                 document.getElementById("upload-form").reset();
             });
         });
