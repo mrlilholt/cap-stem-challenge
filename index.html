@@ -36,17 +36,17 @@
         <!-- Mushroom Image -->
         <img id="mushroom-image" src="" alt="Mushroom Image">
 
-        <!-- Difficulty Selector -->
-        <select id="difficulty" onchange="loadRandomMushroom()">
+        <!-- Genus and Species Inputs -->
+        <input type="text" id="genus" placeholder="Genus">
+        <input type="text" id="species" placeholder="Species">
+        
+         <!-- Difficulty Selector -->
+         <select id="difficulty" onchange="loadRandomMushroom()">
             <option value="random">Random</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
         </select>
-
-        <!-- Genus and Species Inputs -->
-        <input type="text" id="genus" placeholder="Genus">
-        <input type="text" id="species" placeholder="Species">
         
         <!-- Submit Button -->
         <button onclick="submitGuess()">Submit Guess</button>
