@@ -1,0 +1,22 @@
+{
+    "name": "cap-stem-challenge",
+    "version": "1.0.0",
+    "description": "Cap & Stem Mushroom Identification Game",
+    "main": "index.js",
+    "scripts": {
+      "start": "live-server",  
+      "build": "echo 'Build step (if needed)'",
+      "inject-env": "node scripts/inject-env.js",
+      "deploy": "netlify deploy --prod"
+    },
+    "author": "Your Name",
+    "license": "MIT",
+    "dependencies": {
+      "dotenv": "^16.0.3"  
+    },
+    "devDependencies": {
+      "live-server": "^1.2.1",
+      "netlify-cli": "^16.0.0"
+    }
+  }
+  
