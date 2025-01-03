@@ -1,4 +1,4 @@
-import { auth, provider, db, storage } from './firebase.js';
+import { auth, provider } from './firebase.js';
 
 // Google Login
 export function login() {
@@ -11,6 +11,9 @@ export function login() {
         console.error("Login failed:", error);
     });
 }
+
+// Attach to Window (for onclick)
+window.login = login;
 
 // Upload Mushroom to Firestore and Storage
 export function uploadMushroom() {
