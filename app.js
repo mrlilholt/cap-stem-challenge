@@ -109,19 +109,26 @@ async function updateUserScore(points) {
     
     try {
         const userScoreSnap = await getDoc(userScoreRef);
+        let totalScore = 0;
+
+        // If score exists, add to the current score
         if (userScoreSnap.exists()) {
-            await updateDoc(userScoreRef, {
-                score: score,
-                submittedAt: new Date()
-            });
-        } else {
-            await setDoc(userScoreRef, {
-                score: points,
-                submittedAt: new Date()
-            });
+            totalScore = userScoreSnap.data().score;
         }
-        
-        // Log the score in the general "scores" collection for leaderboard
+
+        totalScore += points;  // Add new points (positive or negative)
+
+        // Update Firestore with the new total score
+        await setDoc(userScoreRef, {
+            score: totalScore,
+            submittedAt: new Date()
+        });
+
+        // Reflect updated total score in UI
+        score = totalScore;
+        document.getElementById("score").innerText = totalScore;
+
+        // Log individual submission (for leaderboard)
         await addDoc(collection(db, "scores"), {
             score: points,
             submittedAt: new Date(),
@@ -132,6 +139,7 @@ async function updateUserScore(points) {
         console.error("Error updating score:", error);
     }
 }
+
 
 // Update point calculation based on mushroom difficulty
 function getPoints() {
