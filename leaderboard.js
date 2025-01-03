@@ -7,8 +7,8 @@ async function loadLeaderboard() {
 
     try {
         const leaderboardQuery = query(
-            collection(db, "scores"),
-            orderBy("score", "desc")
+            collection(db, "scores"),  // Pull from scores collection
+            orderBy("score", "desc")   // Order by highest score
         );
 
         const snapshot = await getDocs(leaderboardQuery);
@@ -17,7 +17,14 @@ async function loadLeaderboard() {
             const data = doc.data();
             const entry = document.createElement("div");
             entry.classList.add("leaderboard-entry");
-            entry.innerHTML = `${data.username}: ${data.score} points`;
+            
+            // Display user profile picture, name, and score
+            entry.innerHTML = `
+                <div class="leaderboard-item">
+                    <img src="${data.photoURL || 'default-profile.png'}" alt="User Photo" class="user-photo">
+                    <span>${data.username || 'Anonymous'}: ${data.score} points</span>
+                </div>
+            `;
             leaderboardContainer.appendChild(entry);
         });
     } catch (error) {

@@ -84,21 +84,23 @@ export async function submitGuess() {
 
     if (!currentMushroom) return;
 
-    let points = parseInt(currentMushroom.points) || 1;  // Use mushroom points
+    // Ensure mushroom's point value is used (default to 1 if not set)
+    let points = parseInt(currentMushroom.points) || 1;
 
     if (genus === currentMushroom.genus.toLowerCase() && species === currentMushroom.species.toLowerCase()) {
         score += points;
         document.getElementById("result").innerText = `Correct! +${points} Points`;
-        await updateUserScore(points);
+        await updateUserScore(points);  // Update Firestore with the correct mushroom's point value
     } else {
         score--;
         document.getElementById("result").innerText = "Incorrect. -1 Point";
-        await updateUserScore(-1);
+        await updateUserScore(-1);  // Deduct 1 for incorrect guesses
     }
 
     document.getElementById("score").innerText = score;
     loadRandomMushroom();
 }
+
 
 // Update User Total Score and Log Submission in Firestore
 async function updateUserScore(points) {
