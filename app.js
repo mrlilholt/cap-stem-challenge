@@ -1,4 +1,4 @@
-// Initialize Firebase references
+// Firebase references (No imports needed)
 const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
