@@ -32,3 +32,24 @@ form {
     margin-top: 20px;
     font-weight: bold;
 }
+.user-info {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+#user-name {
+    font-size: 16px;
+    font-weight: bold;
+}

@@ -36,3 +36,4 @@ window.uploadMushroom = function() {
         alert("Upload failed. Please try again.");
     });
 }
+

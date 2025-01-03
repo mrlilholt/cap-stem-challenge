@@ -4,7 +4,28 @@ import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
+window.addEventListener('DOMContentLoaded', () => {
+    onAuthStateChanged(auth, (user) => {
+        const userInfoDiv = document.getElementById('user-info');
+        if (user) {
+            document.getElementById('user-photo').src = user.photoURL;
+            document.getElementById('user-name').textContent = user.displayName;
+            userInfoDiv.style.display = 'flex';
+        } else {
+            userInfoDiv.style.display = 'none';
+        }
+    });
+});
+window.logout = function () {
+    signOut(auth).then(() => {
+        alert("Logged out successfully!");
+        window.location.href = 'index.html';  // Redirect to home page
+    }).catch((error) => {
+        console.error("Logout failed:", error);
+    });
+}
 // Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAn89gsy3bcj6j1wGp_mEvdoGaYh9XyJAg",
