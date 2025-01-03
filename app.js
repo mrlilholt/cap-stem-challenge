@@ -80,9 +80,9 @@ export async function submitGuess() {
         document.getElementById("result").innerText = "Incorrect. -1 Point";
     }
 
-    document.getElementById("score").innerText = score;  // Update UI immediately
     await updateUserScore();  // Update Firestore with new score
-    loadRandomMushroom();  // Load next mushroom
+document.getElementById("score").innerText = score;  // Update UI after Firestore update
+loadRandomMushroom();  // Load next mushroom
 }
 
 // Update User Score in Firestore
