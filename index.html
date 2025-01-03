@@ -31,11 +31,16 @@
 
     <!-- Game Section (Hidden Until Login) -->
     <div id="game-container" style="display:none;">
-        <img id="mushroom-image" src="" alt="Mushroom Image">
+        <img id="mushroom-image" src="https://res.cloudinary.com/mrlilholt/image/upload/v1234/example.jpg" alt="Mushroom Image">
+        <img class="mushroom-thumbnail" src="https://res.cloudinary.com/mrlilholt/image/upload/v1234/preview.jpg" alt="Mushroom Thumbnail">
+        
         <input type="text" id="genus" placeholder="Genus">
         <input type="text" id="species" placeholder="Species">
         <button onclick="submitGuess()">Submit Guess</button>
         <p id="result"></p>
+    </div>
+    
+    
 
         <div>
             <button onclick="goToUpload()">Upload your own Stem/Cap photo</button>
