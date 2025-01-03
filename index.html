@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cap & Stem Challenge</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase UMD (Browser-Compatible) CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: 'YOUR_API_KEY',
+            authDomain: 'YOUR_AUTH_DOMAIN',
+            projectId: 'YOUR_PROJECT_ID',
+            storageBucket: 'YOUR_STORAGE_BUCKET',
+            messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+            appId: 'YOUR_APP_ID',
+            measurementId: 'YOUR_MEASUREMENT_ID'
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
 </head>
 <body>
     <div id="login">
@@ -17,23 +38,9 @@
         <input type="text" id="species" placeholder="Species">
         <button onclick="submitGuess()">Submit Guess</button>
         <p id="result"></p>
-        <button onclick="uploadForm()">Upload Mushroom</button>
-        <div id="upload-section" style="display:none;">
-            <input type="file" id="imageUpload">
-            <select id="partType">
-                <option value="cap">Cap</option>
-                <option value="stem">Stem</option>
-            </select>
-            <input type="text" id="uploadGenus" placeholder="Genus">
-            <input type="text" id="uploadSpecies" placeholder="Species">
-            <button onclick="uploadMushroom()">Upload</button>
-        </div>
     </div>
 
-    <!-- Initialize Firebase and Main App Script -->
-    <script type="module" src="app.js"></script>
-
-    <!-- Attach Functions to Global Scope -->
+    <!-- Import app.js and attach functions to window -->
     <script type="module">
         import { login, submitGuess, uploadMushroom } from './app.js';
         window.login = login;
