@@ -1,8 +1,37 @@
+// Import Firebase Modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 import { auth, provider } from './firebase.js';
+import { signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const analytics = getAnalytics(app);
+const provider = new GoogleAuthProvider();
+
+// Export auth and provider
+export { auth, provider, db, storage };
 
 // Google Login
 export function login() {
-    auth.signInWithPopup(provider)
+    signInWithPopup(auth, provider)
     .then((result) => {
         document.getElementById("login").style.display = "none";
         document.getElementById("game").style.display = "block";

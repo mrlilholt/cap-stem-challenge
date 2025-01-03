@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+
 export const startTimer = (callback, duration) => {
   let timer = duration;
   const interval = setInterval(() => {
