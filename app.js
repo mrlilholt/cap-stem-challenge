@@ -1,9 +1,10 @@
-import { auth, provider } from './firebase.js';
+import { auth, provider, db } from './firebase.js';
 import { signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 // Google Login
 export function login() {
-    signInWithPopup(auth, provider)  // Use imported provider directly
+    signInWithPopup(auth, provider)
     .then((result) => {
         document.getElementById("login").style.display = "none";
         document.getElementById("game").style.display = "block";
@@ -13,7 +14,6 @@ export function login() {
     });
 }
 
-// Attach to Window (for onclick)
 window.login = login;
 
 // Upload Mushroom to Firestore and Storage
@@ -46,51 +46,63 @@ export function uploadMushroom() {
     });
 }
 
-// Load Random Mushroom for Guessing
-import { db } from './firebase.js';
-
 let currentMushroom;
 let score = 0;
 
-export function loadRandomMushroom() {
-    db.collection("mushrooms").get().then((snapshot) => {
-        const mushrooms = snapshot.docs.map(doc => doc.data());
+// Load Random Mushroom with Optional Difficulty Filter
+export async function loadRandomMushroom() {
+    const selectedDifficulty = document.getElementById("difficultyFilter").value;
+    const mushroomsCollection = collection(db, "mushrooms");
+
+    try {
+        const snapshot = await getDocs(mushroomsCollection);
+        const allMushrooms = snapshot.docs.map(doc => doc.data());
+
+        // Filter mushrooms based on selected difficulty
+        let mushrooms = allMushrooms;
+        if (selectedDifficulty !== "random") {
+            mushrooms = allMushrooms.filter(mushroom => mushroom.difficulty === selectedDifficulty);
+        }
+
         if (mushrooms.length > 0) {
             currentMushroom = mushrooms[Math.floor(Math.random() * mushrooms.length)];
             document.getElementById("mushroom-image").src = currentMushroom.imageUrl;
         } else {
-            alert("No mushrooms found.");
+            alert("No mushrooms found for this difficulty. Try uploading more!");
         }
-    });
+    } catch (error) {
+        console.error("Error loading mushrooms:", error);
+    }
 }
 
+// Handle Mushroom Guess and Scoring
 export function submitGuess() {
     const genus = document.getElementById("genus").value.toLowerCase();
     const species = document.getElementById("species").value.toLowerCase();
 
+    let pointValue = 1;  // Default to easy
+    if (currentMushroom.difficulty === "medium") {
+        pointValue = 5;
+    } else if (currentMushroom.difficulty === "difficult") {
+        pointValue = 10;
+    }
+
     if (genus === currentMushroom.genus.toLowerCase() && species === currentMushroom.species.toLowerCase()) {
-        score++;
-        document.getElementById("result").innerText = "Correct! +1 Point";
+        score += pointValue;
+        document.getElementById("result").innerText = `Correct! +${pointValue} Points`;
     } else {
-        score--;
-        document.getElementById("result").innerText = "Incorrect. -1 Point";
+        score -= pointValue;
+        document.getElementById("result").innerText = `Incorrect. -${pointValue} Points`;
     }
     document.getElementById("score").innerText = score;
     loadRandomMushroom();
 }
 
-// Store Score in Firestore
-export function saveScore(username) {
-    db.collection("scores").add({
-        username,
-        score,
-        submittedAt: new Date()
-    }).then(() => {
-        console.log("Score saved!");
-    }).catch((error) => {
-        console.error("Failed to save score:", error);
-    });
-}
+// Attach to window for testing
+window.submitGuess = submitGuess;
 
+// Load the first random mushroom on page load
 window.onload = loadRandomMushroom;
 
+// Reload a mushroom when the difficulty filter changes
+document.getElementById("difficultyFilter").addEventListener("change", loadRandomMushroom);

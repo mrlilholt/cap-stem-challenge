@@ -25,19 +25,28 @@
     </div>
 
     <!-- Score Section -->
-    <div id="score-container">
+    <div id="game-container">
+        <h1>Cap & Stem Challenge</h1>
         <h2>Current Score: <span id="score">0</span></h2>
-    </div>
-
-    <!-- Game Section (Hidden Until Login) -->
-    <div id="game-container" style="display:none;">
-        <img id="mushroom-image" src="https://res.cloudinary.com/mrlilholt/image/upload/v1234/example.jpg" alt="Mushroom Image">
-        <img class="mushroom-thumbnail" src="https://res.cloudinary.com/mrlilholt/image/upload/v1234/preview.jpg" alt="Mushroom Thumbnail">
-        
+    
+        <label for="difficultyFilter">Select Difficulty:</label>
+        <select id="difficultyFilter">
+            <option value="random">Random</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="difficult">Difficult</option>
+        </select>
+    
+        <img id="mushroom-image" src="" alt="Mushroom Image">
         <input type="text" id="genus" placeholder="Genus">
         <input type="text" id="species" placeholder="Species">
         <button onclick="submitGuess()">Submit Guess</button>
         <p id="result"></p>
+    
+        <div>
+            <button onclick="goToUpload()">Upload your own Stem/Cap photo</button>
+            <button onclick="goToLeaderboard()">View Leaderboard</button>
+        </div>
     </div>
     
     

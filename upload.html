@@ -12,24 +12,36 @@
         <h1>Upload a Mushroom</h1>
     </div>
 
-    <form id="uploadForm">
-        <label for="imageUpload">Mushroom Image:</label>
-        <input type="file" id="imageUpload" name="file" required>
-        
-        <label for="partType">Part Type:</label>
-        <select id="partType" required>
-            <option value="cap">Cap</option>
-            <option value="stem">Stem</option>
-        </select>
-
-        <label for="uploadGenus">Genus:</label>
-        <input type="text" id="uploadGenus" required>
-
-        <label for="uploadSpecies">Species:</label>
-        <input type="text" id="uploadSpecies" required>
-
-        <button type="submit">Upload</button>
-    </form>
+    <div id="upload-container">
+        <h1>Upload a Mushroom</h1>
+        <form>
+            <label for="imageUpload">Mushroom Image:</label>
+            <input type="file" id="imageUpload" accept="image/*"><br>
+    
+            <label for="partType">Part Type:</label>
+            <select id="partType">
+                <option value="cap">Cap</option>
+                <option value="stem">Stem</option>
+            </select><br>
+    
+            <label for="uploadGenus">Genus:</label>
+            <input type="text" id="uploadGenus" placeholder="Genus"><br>
+    
+            <label for="uploadSpecies">Species:</label>
+            <input type="text" id="uploadSpecies" placeholder="Species"><br>
+    
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="difficult">Difficult</option>
+            </select><br>
+    
+            <button type="button" onclick="uploadMushroom()">Upload</button>
+        </form>
+        <a href="index.html">Back to Game</a>
+    </div>
+    
 
     <script>
         const cloudName = 'mrlilholt';
