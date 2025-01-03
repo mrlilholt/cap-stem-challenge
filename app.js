@@ -1,4 +1,4 @@
-// Use the globally defined firebase object (from UMD CDN)
+// Use the globally available firebase object from the UMD CDN
 const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
