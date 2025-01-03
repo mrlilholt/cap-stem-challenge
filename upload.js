@@ -1,4 +1,5 @@
 import { storage, db } from './firebase.js';
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
 
 window.uploadMushroom = function() {
     const file = document.getElementById("imageUpload").files[0];
@@ -11,10 +12,14 @@ window.uploadMushroom = function() {
         return;
     }
 
-    const storageRef = storage.ref(`mushrooms/${partType}/${file.name}`);
+    // Correct way to create storage reference
+    const storageRef = ref(storage, `mushrooms/${partType}/${file.name}`);
     
-    storageRef.put(file).then((snapshot) => {
-        snapshot.ref.getDownloadURL().then((downloadURL) => {
+    // Upload the file
+    uploadBytes(storageRef, file).then((snapshot) => {
+        // Get the download URL
+        getDownloadURL(snapshot.ref).then((downloadURL) => {
+            // Add to Firestore collection
             db.collection("mushrooms").add({
                 imageUrl: downloadURL,
                 partType,
