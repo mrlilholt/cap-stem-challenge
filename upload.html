@@ -33,32 +33,28 @@
         <h1>Upload a Mushroom</h1>
 
         <form id="uploadForm">
-            <!-- Mushroom Image Upload -->
             <label for="imageUpload">Mushroom Image:</label>
             <input type="file" id="imageUpload" accept="image/*">
-
-            <!-- Divider -->
-            <hr class="divider">
-
-            <!-- Mushroom Data -->
+        
             <label for="partType">Part Type:</label>
             <select id="partType">
                 <option value="cap">Cap</option>
                 <option value="stem">Stem</option>
             </select>
-
+        
             <label for="difficulty">Difficulty:</label>
             <select id="difficulty">
                 <option value="easy">Easy - 1 point</option>
                 <option value="medium">Medium - 5 points</option>
                 <option value="hard">Hard - 10 points</option>
             </select>
-
+        
             <input type="text" id="uploadGenus" placeholder="Genus" required>
             <input type="text" id="uploadSpecies" placeholder="Species" required>
-
+        
             <button type="button" onclick="uploadMushroom()">Upload</button>
         </form>
+        
     </div>
 
     <!-- Firebase and Upload Scripts -->

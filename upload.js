@@ -51,3 +51,17 @@ window.uploadMushroom = async function () {
         alert("Upload failed. Please try again.");
     }
 }
+
+// Function to assign points during upload
+function getPoints(difficulty) {
+    switch (difficulty) {
+        case "easy":
+            return 1;
+        case "medium":
+            return 5;
+        case "hard":
+            return 10;
+        default:
+            return 1;
+    }
+}
