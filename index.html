@@ -5,28 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cap & Stem Challenge</title>
     <link rel="stylesheet" href="style.css">
-
-    <!-- UMD (Browser-Compatible) Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js"></script>
-
-    
-    <!-- Firebase Initialization -->
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAn89gsy3bcj6j1wGp_mEvdoGaYh9XyJAg",
-  authDomain: "cap-stem-challenge.firebaseapp.com",
-  projectId: "cap-stem-challenge",
-  storageBucket: "cap-stem-challenge.firebasestorage.app",
-  messagingSenderId: "286470006062",
-  appId: "1:286470006062:web:78e1472fc313d88f2206bf",
-  measurementId: "G-FZLR2BVWRD"
-        };
-        firebase.initializeApp(firebaseConfig);
-    </script>
 </head>
 <body>
     <div id="login">
@@ -41,7 +19,8 @@
         <p id="result"></p>
     </div>
 
-    <!-- Attach app.js functionality to window -->
-    <script src="app.js"></script>
+    <!-- Firebase App Initialization -->
+    <script type="module" src="./firebase.js"></script>
+    <script type="module" src="./app.js"></script>
 </body>
 </html>
