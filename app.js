@@ -1,6 +1,6 @@
 import { auth, provider, db } from './firebase.js';
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { collection, getDocs, doc, getDoc, setDoc, updateDoc, query, where, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 let currentMushroom;
 let score = 0;
@@ -11,7 +11,7 @@ export function login() {
         .then(() => {
             document.getElementById("login").style.display = "none";
             document.getElementById("game").style.display = "block";
-            fetchUserScore();  // Fetch user score immediately after login
+            fetchUserScore();
         })
         .catch((error) => {
             console.error("Login failed:", error);
@@ -20,7 +20,7 @@ export function login() {
 
 window.login = login;
 
-// Display User Info
+// Display User Info and Fetch Score
 onAuthStateChanged(auth, (user) => {
     if (user) {
         document.getElementById("user-photo").src = user.photoURL;
@@ -48,12 +48,12 @@ async function fetchUserScore() {
 // Load Random Mushroom Based on Difficulty
 export async function loadRandomMushroom() {
     const difficulty = document.getElementById("difficulty").value;
-    
+
     try {
         let mushroomQuery;
-        
+
         if (difficulty === "random") {
-            mushroomQuery = collection(db, "mushrooms");  // No filter for random
+            mushroomQuery = collection(db, "mushrooms");
         } else {
             mushroomQuery = query(
                 collection(db, "mushrooms"),
@@ -89,20 +89,15 @@ export async function submitGuess() {
     if (genus === currentMushroom.genus.toLowerCase() && species === currentMushroom.species.toLowerCase()) {
         score += points;
         document.getElementById("result").innerText = `Correct! +${points} Points`;
-        
-        // Update Firestore with new score
         await updateUserScore(points);
-        
-        // Immediately load a new mushroom after correct guess
-        await loadRandomMushroom();
-        
     } else {
         score--;
         document.getElementById("result").innerText = "Incorrect. -1 Point";
         await updateUserScore(-1);
     }
 
-    document.getElementById("score").innerText = score;  // Reflect immediately
+    document.getElementById("score").innerText = score;
+    loadRandomMushroom();
 }
 
 // Update User Score in Firestore
@@ -121,20 +116,20 @@ async function updateUserScore(points) {
 
         totalScore += points;
 
-        await setDoc(userScoreRef, {
+        await updateDoc(userScoreRef, {
             score: totalScore,
             submittedAt: new Date()
         });
 
-        score = totalScore;
-        document.getElementById("score").innerText = score;
-
-        // Log individual submission for leaderboard
-        await addDoc(collection(db, "scores"), {
+        // Log the individual submission for leaderboard tracking
+        await addDoc(collection(db, "score_logs"), {
             score: points,
             submittedAt: new Date(),
             username: auth.currentUser.displayName || "Anonymous"
         });
+
+        // Fetch the updated score and refresh the UI
+        fetchUserScore();
 
     } catch (error) {
         console.error("Error updating score:", error);
