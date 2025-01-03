@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Mushroom</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
+        <h1>Upload a Mushroom</h1>
+    </div>
+
+    <div id="upload-container">
+        <form id="upload-form">
+            <label for="imageUpload">Mushroom Image:</label><br>
+            <input type="file" id="imageUpload" accept="image/*" required><br><br>
+
+            <label for="partType">Part Type:</label><br>
+            <select id="partType">
+                <option value="cap">Cap</option>
+                <option value="stem">Stem</option>
+            </select><br><br>
+
+            <label for="uploadGenus">Genus:</label><br>
+            <input type="text" id="uploadGenus" placeholder="Genus" required><br><br>
+
+            <label for="uploadSpecies">Species:</label><br>
+            <input type="text" id="uploadSpecies" placeholder="Species" required><br><br>
+
+            <button type="button" onclick="uploadMushroom()">Upload</button>
+        </form>
+
+        <p id="upload-result"></p>
+        <a href="index.html">Back to Game</a>
+    </div>
+
+    <script type="module" src="./firebase.js"></script>
+    <script type="module" src="./upload.js"></script>
+</body>
+</html>
