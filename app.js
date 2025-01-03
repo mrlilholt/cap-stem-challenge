@@ -50,10 +50,16 @@ export async function loadRandomMushroom() {
     const difficulty = document.getElementById("difficulty").value;
     
     try {
-        const mushroomQuery = query(
-            collection(db, "mushrooms"),
-            difficulty === "random" ? undefined : where("difficulty", "==", difficulty)
-        );
+        let mushroomQuery;
+        
+        if (difficulty === "random") {
+            mushroomQuery = collection(db, "mushrooms"); // No filter for random
+        } else {
+            mushroomQuery = query(
+                collection(db, "mushrooms"),
+                where("difficulty", "==", difficulty)
+            );
+        }
 
         const snapshot = await getDocs(mushroomQuery);
         const mushrooms = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
