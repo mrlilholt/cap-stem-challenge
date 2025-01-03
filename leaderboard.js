@@ -1,20 +1,28 @@
 import { db } from './firebase.js';
+import { collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-const leaderboardList = document.getElementById("leaderboard");
+async function loadLeaderboard() {
+    const leaderboardContainer = document.getElementById("leaderboard");
+    leaderboardContainer.innerHTML = "";
 
-// Fetch scores from Firestore
-db.collection("scores")
-    .orderBy("score", "desc")
-    .limit(10)
-    .get()
-    .then((snapshot) => {
+    try {
+        const leaderboardQuery = query(
+            collection(db, "scores"),
+            orderBy("score", "desc")
+        );
+
+        const snapshot = await getDocs(leaderboardQuery);
+
         snapshot.forEach((doc) => {
             const data = doc.data();
-            const li = document.createElement("li");
-            li.textContent = `${data.username}: ${data.score} points`;
-            leaderboardList.appendChild(li);
+            const entry = document.createElement("div");
+            entry.classList.add("leaderboard-entry");
+            entry.innerHTML = `${data.username}: ${data.score} points`;
+            leaderboardContainer.appendChild(entry);
         });
-    })
-    .catch((error) => {
+    } catch (error) {
         console.error("Error loading leaderboard:", error);
-    });
+    }
+}
+
+window.onload = loadLeaderboard;

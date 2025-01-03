@@ -1,6 +1,6 @@
 import { auth, provider, db } from './firebase.js';
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 let currentMushroom;
 let score = 0;
@@ -29,7 +29,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Fetch and Set User Score from Firestore
+// Fetch and Set User Total Score from Firestore
 async function fetchUserScore() {
     if (!auth.currentUser) return;
 
@@ -100,7 +100,7 @@ export async function submitGuess() {
     loadRandomMushroom();
 }
 
-// Update User Score in Firestore
+// Update User Total Score and Log Submission in Firestore
 async function updateUserScore(points) {
     if (!auth.currentUser) return;
 
