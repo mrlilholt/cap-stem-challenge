@@ -25,6 +25,15 @@
             width: 20px;
             height: 20px;
         }
+        .dropdown a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: black;
+        }
+        .dropdown a:hover {
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
@@ -89,19 +98,18 @@
     <script type="module" src="./app.js"></script>
 
     <script>
-        // Toggle Menu Dropdown
-        document.getElementById("menuButton").onclick = function() {
-            const dropdown = document.getElementById('menuDropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        const menuButton = document.getElementById("menuButton");
+        const menuDropdown = document.getElementById("menuDropdown");
+
+        menuButton.onclick = function(event) {
+            event.stopPropagation(); // Prevent window click from closing immediately
+            menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
         };
 
         // Close dropdown if clicked outside
         window.onclick = function(event) {
-            if (!event.target.matches('.menu-btn')) {
-                const dropdown = document.getElementById('menuDropdown');
-                if (dropdown.style.display === 'block') {
-                    dropdown.style.display = 'none';
-                }
+            if (!event.target.closest('.menu-btn')) {
+                menuDropdown.style.display = 'none';
             }
         };
 
