@@ -19,7 +19,7 @@
     <!-- Main Container (Hidden until logged in) -->
     <div class="container" id="main-container" style="display: none;">
         <!-- Menu Button -->
-        <button class="menu-btn" onclick="toggleDropdown()">☰</button>
+        <button class="menu-btn" id="menuButton">☰</button>
         
         <!-- Dropdown Menu -->
         <div class="dropdown" id="menuDropdown">
@@ -75,10 +75,20 @@
 
     <script>
         // Toggle Menu Dropdown
-        function toggleDropdown() {
+        document.getElementById("menuButton").onclick = function() {
             const dropdown = document.getElementById('menuDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
+        };
+
+        // Close dropdown if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-btn')) {
+                const dropdown = document.getElementById('menuDropdown');
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        };
 
         // Logout Handler
         function logout() {
