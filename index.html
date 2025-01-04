@@ -24,38 +24,49 @@
         <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
 
         <!-- User Info -->
-        <div class="user-info">
+        <div class="user-info" id="user-info" style="display: none;">
             <img id="user-photo" src="" alt="User Photo" class="user-photo">
             <span id="user-name"></span>
         </div>
 
+        <!-- Login Section (Visible if not logged in) -->
+        <div id="login-section" style="text-align: center; margin-top: 20px;">
+            <button onclick="login()" class="google-login-btn">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-logo">
+                Login with Google
+            </button>
+        </div>
+
         <!-- Score -->
-        <div id="score-container">
+        <div id="score-container" style="display: none;">
             Current Score: <span id="score">0</span>
         </div>
 
         <!-- Mushroom Image -->
-        <img id="mushroom-image" src="" alt="Mushroom Image">
+        <img id="mushroom-image" src="" alt="Mushroom Image" style="display: none;">
+        
         <!-- Divider -->
         <hr class="divider">
 
         <!-- Genus and Species Inputs -->
-        <input type="text" id="genus" placeholder="Genus">
-        <input type="text" id="species" placeholder="Species">
-        
-         <!-- Difficulty Selector -->
-         <select id="difficulty" onchange="loadRandomMushroom()">
-            <option value="random">Random</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
+        <div id="game-section" style="display: none;">
+            <input type="text" id="genus" placeholder="Genus">
+            <input type="text" id="species" placeholder="Species">
+            
+            <!-- Difficulty Selector -->
+            <select id="difficulty" onchange="loadRandomMushroom()">
+                <option value="random">Random</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
 
-        <!-- Submit Button -->
-        <button onclick="submitGuess()">Submit Guess</button>
+            <!-- Submit Button -->
+            <button onclick="submitGuess()">Submit Guess</button>
 
-        <!-- Result Display -->
-        <p id="result"></p>
+            <!-- Result Display -->
+            <p id="result"></p>
+        </div>
     </div>
 
     <!-- Firebase and App Scripts -->
@@ -74,6 +85,34 @@
         function logout() {
             window.logout();
         }
+
+        // Manage Login State Display
+        import { auth, onAuthStateChanged } from './firebase.js';
+        
+        onAuthStateChanged(auth, (user) => {
+            const loginSection = document.getElementById('login-section');
+            const userInfo = document.getElementById('user-info');
+            const gameSection = document.getElementById('game-section');
+            const scoreContainer = document.getElementById('score-container');
+            const mushroomImage = document.getElementById('mushroom-image');
+
+            if (user) {
+                loginSection.style.display = 'none';
+                userInfo.style.display = 'flex';
+                gameSection.style.display = 'block';
+                scoreContainer.style.display = 'block';
+                mushroomImage.style.display = 'block';
+
+                document.getElementById('user-photo').src = user.photoURL;
+                document.getElementById('user-name').textContent = user.displayName;
+            } else {
+                loginSection.style.display = 'block';
+                userInfo.style.display = 'none';
+                gameSection.style.display = 'none';
+                scoreContainer.style.display = 'none';
+                mushroomImage.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
