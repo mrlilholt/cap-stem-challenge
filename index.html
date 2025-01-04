@@ -47,9 +47,6 @@
 
     <!-- Main Container (Hidden until logged in) -->
     <div class="container" id="main-container" style="display: none;">
-        <!-- Menu Button -->
-        <button class="menu-btn" id="menuButton">☰</button>
-        
         <!-- Dropdown Menu -->
         <button class="menu-btn" onclick="toggleDropdown()">☰</button>
         <div class="dropdown" id="menuDropdown">
@@ -99,13 +96,11 @@
     <script type="module" src="./app.js"></script>
 
     <script>
-        const menuButton = document.getElementById("menuButton");
-        const menuDropdown = document.getElementById("menuDropdown");
-
-        menuButton.onclick = function(event) {
-            event.stopPropagation(); // Prevent window click from closing immediately
-            menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
-        };
+        // Dropdown Menu Toggle
+        function toggleDropdown() {
+            const dropdown = document.getElementById('menuDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
 
         // Close dropdown if clicked outside
         window.onclick = function(event) {
