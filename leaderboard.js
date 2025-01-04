@@ -7,24 +7,40 @@ async function loadLeaderboard() {
     leaderboardContainer.innerHTML = ""; // Clear existing content
 
     const scoresRef = collection(db, "scores");
-    const q = query(scoresRef, orderBy("score", "desc"));
+    const q = query(scoresRef, orderBy("submittedAt", "desc"));  // Order by most recent
 
     try {
         const querySnapshot = await getDocs(q);
+        const latestScores = new Map();
+
         querySnapshot.forEach((doc) => {
             const user = doc.data();
+            // If user isn't already in the map, add their most recent score
+            if (!latestScores.has(user.uid)) {
+                latestScores.set(user.uid, user);
+            }
+        });
+
+        // Convert map to array and sort by score
+        const sortedScores = Array.from(latestScores.values()).sort((a, b) => b.score - a.score);
+
+        sortedScores.forEach((user) => {
             const userElement = document.createElement("div");
             userElement.classList.add("leaderboard-item");
 
             userElement.innerHTML = `
                 <div class="leaderboard-row">
                     <img src="https://ui-avatars.com/api/?name=${user.username}" class="leaderboard-avatar" alt="${user.username}" />
-                    <span class="username">${user.username}</span>
+                    <span class="username">${user.username || "Unknown"}</span>
                     <span class="score">${user.score} Points</span>
                 </div>
             `;
             leaderboardContainer.appendChild(userElement);
         });
+
+        if (sortedScores.length === 0) {
+            leaderboardContainer.innerHTML = "<p>No scores available yet. Be the first!</p>";
+        }
     } catch (error) {
         console.error("Error loading leaderboard:", error);
         leaderboardContainer.innerHTML = "<p>Error loading leaderboard. Please try again.</p>";
