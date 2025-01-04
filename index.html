@@ -24,14 +24,9 @@
         <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
 
         <!-- User Info -->
-        <div class="user-info" id="user-info">
+        <div class="user-info">
             <img id="user-photo" src="" alt="User Photo" class="user-photo">
             <span id="user-name"></span>
-        </div>
-
-        <!-- Login Button (Only if logged out) -->
-        <div id="login-section" style="display: none;">
-            <button onclick="login()">Login with Google</button>
         </div>
 
         <!-- Score -->
@@ -79,21 +74,6 @@
         function logout() {
             window.logout();
         }
-
-        // Handle Auth State to Show/Hide Login Section
-        import { auth, onAuthStateChanged } from './firebase.js';
-        
-        onAuthStateChanged(auth, (user) => {
-            const loginSection = document.getElementById('login-section');
-            const userInfo = document.getElementById('user-info');
-            if (user) {
-                loginSection.style.display = 'none';
-                userInfo.style.display = 'flex';
-            } else {
-                loginSection.style.display = 'block';
-                userInfo.style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>
