@@ -62,21 +62,23 @@ async function fetchUserScore() {
 async function updateUserScore(points) {
     if (!auth.currentUser) return;
 
-    const userScoreRef = doc(db, "scores", auth.currentUser.uid);
     const user = auth.currentUser;
+    const userScoreRef = doc(db, "scores", user.uid);
 
     try {
         const userScoreSnap = await getDoc(userScoreRef);
 
         if (userScoreSnap.exists()) {
-            // Update the existing score
+            // Update existing score and refresh username/photoURL
             const newScore = userScoreSnap.data().score + points;
             await updateDoc(userScoreRef, {
                 score: newScore,
+                username: user.displayName,  // Ensure username is updated
+                photoURL: user.photoURL,     // Ensure photoURL is updated
                 submittedAt: new Date()
             });
         } else {
-            // Create a new score document
+            // Create a new score document with user info
             await setDoc(userScoreRef, {
                 uid: user.uid,
                 username: user.displayName,
@@ -88,8 +90,6 @@ async function updateUserScore(points) {
     } catch (error) {
         console.error("Error updating score:", error);
     }
-
-    // Reload leaderboard to reflect updated scores
     loadLeaderboard();
 }
 
