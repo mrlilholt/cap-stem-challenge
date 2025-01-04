@@ -98,8 +98,6 @@ export async function submitGuess() {
     document.getElementById("score").innerText = score;
 }
 
-
-
 // Update User Total Score and Log Submission in Firestore
 async function updateUserScore(points) {
     if (!auth.currentUser) return;
