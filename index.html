@@ -25,6 +25,19 @@
             width: 20px;
             height: 20px;
         }
+        .hidden {
+            display: none;
+        }
+        .dropdown {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 10;
+            display: none;
+        }
         .dropdown a {
             display: block;
             padding: 10px 20px;
@@ -47,8 +60,10 @@
 
     <!-- Main Container (Hidden until logged in) -->
     <div class="container" id="main-container" style="display: none;">
+        <!-- Menu Button -->
+        <button class="menu-btn" id="menuButton">☰</button>
+        
         <!-- Dropdown Menu -->
-        <button class="menu-btn" onclick="toggleDropdown()">☰</button>
         <div class="dropdown" id="menuDropdown">
             <a href="index.html">Home</a>
             <a href="upload.html">Upload</a>
@@ -96,18 +111,24 @@
     <script type="module" src="./app.js"></script>
 
     <script>
-        // Dropdown Menu Toggle
-        function toggleDropdown() {
-            const dropdown = document.getElementById('menuDropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuButton = document.getElementById("menuButton");
+            const menuDropdown = document.getElementById("menuDropdown");
 
-        // Close dropdown if clicked outside
-        window.onclick = function(event) {
-            if (!event.target.closest('.menu-btn')) {
-                menuDropdown.style.display = 'none';
-            }
-        };
+            menuButton.addEventListener("click", function (event) {
+                event.stopPropagation();
+                menuDropdown.classList.toggle("hidden");
+                menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Close dropdown if clicked outside
+            window.addEventListener("click", function (event) {
+                if (!event.target.closest('.menu-btn')) {
+                    menuDropdown.classList.add("hidden");
+                    menuDropdown.style.display = 'none';
+                }
+            });
+        });
 
         // Logout Handler
         function logout() {
