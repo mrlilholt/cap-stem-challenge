@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Login Section (Visible if not logged in) -->
+    <div id="login-section" style="text-align: center; margin-top: 20px;">
+        <button onclick="login()" class="google-login-btn">
+            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-logo">
+            Login with Google
+        </button>
+    </div>
     <div class="container">
         <!-- Menu Button -->
         <button class="menu-btn" onclick="toggleDropdown()">☰</button>
@@ -27,14 +34,6 @@
         <div class="user-info" id="user-info" style="display: none;">
             <img id="user-photo" src="" alt="User Photo" class="user-photo">
             <span id="user-name"></span>
-        </div>
-
-        <!-- Login Section (Visible if not logged in) -->
-        <div id="login-section" style="text-align: center; margin-top: 20px;">
-            <button onclick="login()" class="google-login-btn">
-                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-logo">
-                Login with Google
-            </button>
         </div>
 
         <!-- Score -->

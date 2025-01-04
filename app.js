@@ -9,8 +9,8 @@ let score = 0;
 export function login() {
     signInWithPopup(auth, provider)
         .then(() => {
-            document.getElementById("login").style.display = "none";
-            document.getElementById("game").style.display = "block";
+            document.getElementById("login-button").style.display = "none";
+            document.querySelector(".container").style.display = "block";  // Show game container
             fetchUserScore();
         })
         .catch((error) => {
@@ -20,16 +20,20 @@ export function login() {
 
 window.login = login;
 
-// Display User Info
+// Display User Info and Toggle Content
 onAuthStateChanged(auth, (user) => {
+    const gameContainer = document.querySelector(".container");
+    const loginButton = document.getElementById("login-button");
+    
     if (user) {
         document.getElementById("user-photo").src = user.photoURL;
         document.getElementById("user-name").textContent = user.displayName;
+        loginButton.style.display = "none";
+        gameContainer.style.display = "block";  // Show game container after login
         fetchUserScore();
     } else {
-        // Show login button if user logs out
-        document.getElementById("login").style.display = "block";
-        document.getElementById("game").style.display = "none";
+        gameContainer.style.display = "none";
+        loginButton.style.display = "block";
     }
 });
 
@@ -42,7 +46,7 @@ async function fetchUserScore() {
 
     if (userScoreSnap.exists()) {
         score = userScoreSnap.data().score || 0;
-        localStorage.setItem("userScore", score);  // Store the score in localStorage
+        localStorage.setItem("userScore", score);
     } else {
         await setDoc(userScoreRef, { score: 0 });
         score = 0;
@@ -111,14 +115,6 @@ async function updateUserScore(points) {
                 submittedAt: new Date()
             });
         }
-        
-        // Log the score in the general "scores" collection for leaderboard
-        await addDoc(collection(db, "scores"), {
-            score: points,
-            submittedAt: new Date(),
-            username: auth.currentUser.displayName || "Anonymous"
-        });
-
     } catch (error) {
         console.error("Error updating score:", error);
     }
@@ -136,7 +132,7 @@ window.onload = () => {
 
 // Logout and Clear Score
 window.logout = () => {
-    localStorage.removeItem("userScore");  // Reset local storage on logout
+    localStorage.removeItem("userScore");
     auth.signOut().then(() => {
         window.location.href = "index.html";
     }).catch((error) => {
