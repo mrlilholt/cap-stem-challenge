@@ -1,5 +1,6 @@
-import { db } from './firebase.js';
+import { db, auth } from './firebase.js';
 import { collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
 // Load and Display Leaderboard Data
 async function loadLeaderboard() {
@@ -16,7 +17,7 @@ async function loadLeaderboard() {
         querySnapshot.forEach((doc) => {
             const user = doc.data();
             // If user isn't already in the map, add their most recent score
-            if (!latestScores.has(user.uid)) {
+            if (!latestScores.has(user.uid) || user.submittedAt.toMillis() > latestScores.get(user.uid).submittedAt.toMillis()) {
                 latestScores.set(user.uid, user);
             }
         });
@@ -46,5 +47,29 @@ async function loadLeaderboard() {
         leaderboardContainer.innerHTML = "<p>Error loading leaderboard. Please try again.</p>";
     }
 }
+
+// Show login button if not authenticated
+onAuthStateChanged(auth, (user) => {
+    const loginButton = document.getElementById("login-button");
+    const leaderboardSection = document.getElementById("leaderboard-section");
+
+    if (user) {
+        loginButton.style.display = "none";
+        leaderboardSection.style.display = "block";
+        loadLeaderboard();
+    } else {
+        loginButton.style.display = "block";
+        leaderboardSection.style.display = "none";
+    }
+});
+
+// Handle login button click
+window.login = function() {
+    auth.signInWithPopup(provider).then(() => {
+        loadLeaderboard();
+    }).catch((error) => {
+        console.error("Login failed:", error);
+    });
+};
 
 window.onload = loadLeaderboard;

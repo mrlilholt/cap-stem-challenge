@@ -26,6 +26,10 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById("user-photo").src = user.photoURL;
         document.getElementById("user-name").textContent = user.displayName;
         fetchUserScore();
+    } else {
+        // Show login button if user logs out
+        document.getElementById("login").style.display = "block";
+        document.getElementById("game").style.display = "none";
     }
 });
 
