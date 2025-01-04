@@ -29,24 +29,27 @@
             display: none;
         }
         .dropdown {
-            position: absolute;
-            top: 60px;
-            right: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            z-index: 10;
-            display: none;
-        }
-        .dropdown a {
-            display: block;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: black;
-        }
-        .dropdown a:hover {
-            background-color: #f1f1f1;
-        }
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 10;
+    display: none; /* Start hidden */
+}
+
+.dropdown a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: black;
+}
+
+.dropdown a:hover {
+    background-color: #f1f1f1;
+}
+
     </style>
 </head>
 <body>
@@ -111,23 +114,28 @@
     <script type="module" src="./app.js"></script>
 
     <script>
-        // Ensure dropdown works without import errors
         document.addEventListener("DOMContentLoaded", function () {
             const menuButton = document.getElementById("menuButton");
             const menuDropdown = document.getElementById("menuDropdown");
-
+    
             menuButton.addEventListener("click", function (event) {
                 event.stopPropagation();
-                menuDropdown.classList.toggle("hidden");
+                if (menuDropdown.style.display === "block") {
+                    menuDropdown.style.display = "none";
+                } else {
+                    menuDropdown.style.display = "block";
+                }
             });
-
-            // Close dropdown if clicked outside
-            window.addEventListener("click", function (event) {
-                if (!event.target.closest('.menu-btn')) {
-                    menuDropdown.classList.add("hidden");
+    
+            // Close dropdown when clicking outside of the menu
+            document.addEventListener("click", function (event) {
+                if (!menuButton.contains(event.target) && !menuDropdown.contains(event.target)) {
+                    menuDropdown.style.display = "none";
                 }
             });
         });
+    </script>
+    
 
         // Dummy logout (replace with actual logout handler)
         function logout() {
