@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaderboard</title>
+    <title>Leaderboard - Cap & Stem Challenge</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Menu Button -->
         <button class="menu-btn" onclick="toggleDropdown()">☰</button>
-        
-        <!-- Dropdown Menu -->
         <div class="dropdown" id="menuDropdown">
             <a href="index.html">Home</a>
             <a href="upload.html">Upload</a>
@@ -19,56 +16,28 @@
             <a href="#" onclick="logout()">Logout</a>
         </div>
 
-        <!-- Logo -->
         <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
 
-        <!-- User Info -->
         <div class="user-info">
             <img id="user-photo" src="" alt="User Photo" class="user-photo">
             <span id="user-name"></span>
-        </div>  
-        
-        <div class="leaderboard-section">
-            <h1>Leaderboard</h1>
-            <div id="leaderboard-container"></div>
-            <button onclick="window.location.href='index.html'">Back to Game</button>
         </div>
-        
 
-    <!-- Firebase and App Scripts -->
+        <h1 class="leaderboard-title">Leaderboard</h1>
+        
+        <div id="leaderboard-container"></div>
+
+        <button onclick="window.location.href='index.html'">Back to Game</button>
+    </div>
+
     <script type="module" src="./firebase.js"></script>
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./leaderboard.js"></script>
 
     <script>
-        // Toggle Menu Dropdown
+        // Dropdown Menu Toggle
         function toggleDropdown() {
             const dropdown = document.getElementById('menuDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-
-        //Leaderboard Data (Firestore fetch)
-        document.addEventListener('DOMContentLoaded', async () => {
-    const leaderboardContent = document.getElementById('leaderboard-content');
-    leaderboardContent.innerHTML = '';  // Clear previous content
-
-    const scoresSnapshot = await getDocs(collection(db, "scores"));
-    const scores = scoresSnapshot.docs.map(doc => doc.data());
-
-    // Sort by highest score
-    scores.sort((a, b) => b.score - a.score);
-
-    scores.forEach(entry => {
-        const div = document.createElement('div');
-        div.classList.add('leaderboard-entry');
-        div.innerHTML = `<strong>${entry.username || "Anonymous"}</strong>: ${entry.score} points`;
-        leaderboardContent.appendChild(div);
-    });
-});
-
-
-        // Go back to the main game
-        function goBack() {
-            window.location.href = 'index.html';
         }
     </script>
 </body>
