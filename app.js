@@ -1,6 +1,6 @@
 import { auth, provider, db } from './firebase.js';
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { collection, getDocs, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 let currentMushroom;
 let score = 0;
@@ -31,7 +31,7 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById("user-name").textContent = user.displayName || 'Unknown User';
         loginSection.style.display = "none";
         gameContainer.style.display = "block";
-        userInfo.style.display = "flex"; // Show user info
+        userInfo.style.display = "flex";
         fetchUserScore();
     } else {
         loginSection.style.display = "block";
@@ -77,7 +77,7 @@ async function updateUserScore(points) {
     document.getElementById("score").innerText = score;
 }
 
-// Load Random Mushroom (from Firestore/Cloudinary)
+// Load Random Mushroom and Display Difficulty Icon
 export async function loadRandomMushroom() {
     try {
         const snapshot = await getDocs(collection(db, "mushrooms"));
@@ -88,6 +88,21 @@ export async function loadRandomMushroom() {
             const mushroomImageElement = document.getElementById("mushroom-image");
             mushroomImageElement.src = currentMushroom.imageUrl;
             mushroomImageElement.alt = `${currentMushroom.genus} ${currentMushroom.species}`;
+            
+            const difficultyIcon = document.getElementById("difficulty-icon");
+            switch (currentMushroom.difficulty) {
+                case 'easy':
+                    difficultyIcon.src = "easy.png";
+                    break;
+                case 'medium':
+                    difficultyIcon.src = "medium.png";
+                    break;
+                case 'hard':
+                    difficultyIcon.src = "hard.png";
+                    break;
+                default:
+                    difficultyIcon.src = "random.png";
+            }
         } else {
             alert("No mushrooms found.");
         }

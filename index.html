@@ -6,6 +6,26 @@
     <title>Cap & Stem Challenge</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .difficulty-icon {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+        .google-login-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .google-logo {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
 </head>
 <body>
     <!-- Login Section (Visible if not logged in) -->
@@ -52,17 +72,12 @@
         <div id="game-section">
             <input type="text" id="genus" placeholder="Genus">
             <input type="text" id="species" placeholder="Species">
-            
-            <!-- Difficulty Selector -->
-            <select id="difficulty" onchange="loadRandomMushroom()">
-                <option value="random">Random</option>
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-            </select>
 
-            <!-- Submit Button -->
-            <button onclick="submitGuess()">Submit Guess</button>
+            <!-- Submit Button with Difficulty Icon -->
+            <div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
+                <button onclick="submitGuess()">Submit Guess</button>
+                <img id="difficulty-icon" class="difficulty-icon" src="random.png" alt="Difficulty Icon">
+            </div>
 
             <!-- Result Display -->
             <p id="result"></p>
