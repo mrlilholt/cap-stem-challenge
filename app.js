@@ -63,35 +63,36 @@ async function updateUserScore(points) {
     if (!auth.currentUser) return;
 
     const userScoreRef = doc(db, "scores", auth.currentUser.uid);
-    const user = auth.currentUser;  // Get current user info
-
-    score += points;
+    const user = auth.currentUser;
 
     try {
-        // Update user score and metadata
-        await setDoc(userScoreRef, {
-            score: score,
-            submittedAt: new Date(),
-            username: user.displayName || "Unknown",
-            photoURL: user.photoURL || "default-avatar.png",  // Fallback to default image
-            uid: user.uid
-        });
+        const userScoreSnap = await getDoc(userScoreRef);
 
-        // Log score for leaderboard collection
-        await addDoc(collection(db, "scores"), {
-            uid: auth.currentUser.uid,
-            username: auth.currentUser.displayName || "Unknown",
-            photoURL: auth.currentUser.photoURL || "default-avatar.png",
-            score: points,
-            submittedAt: new Date()
-        });
-        
+        if (userScoreSnap.exists()) {
+            // Update the existing score
+            const newScore = userScoreSnap.data().score + points;
+            await updateDoc(userScoreRef, {
+                score: newScore,
+                submittedAt: new Date()
+            });
+        } else {
+            // Create a new score document
+            await setDoc(userScoreRef, {
+                uid: user.uid,
+                username: user.displayName,
+                photoURL: user.photoURL,
+                score: points,
+                submittedAt: new Date()
+            });
+        }
     } catch (error) {
         console.error("Error updating score:", error);
     }
 
-    document.getElementById("score").innerText = score;
+    // Reload leaderboard to reflect updated scores
+    loadLeaderboard();
 }
+
 
 
 // Load Random Mushroom and Display Difficulty Icon
