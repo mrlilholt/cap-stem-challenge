@@ -79,12 +79,13 @@ async function updateUserScore(points) {
 
         // Log score for leaderboard collection
         await addDoc(collection(db, "scores"), {
-            score: score,
-            submittedAt: new Date(),
-            username: user.displayName || "Unknown",
-            photoURL: user.photoURL || "default-avatar.png",
-            uid: user.uid
+            uid: auth.currentUser.uid,
+            username: auth.currentUser.displayName || "Unknown",
+            photoURL: auth.currentUser.photoURL || "default-avatar.png",
+            score: points,
+            submittedAt: new Date()
         });
+        
     } catch (error) {
         console.error("Error updating score:", error);
     }
