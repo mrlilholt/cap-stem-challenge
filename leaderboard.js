@@ -15,13 +15,19 @@ async function loadLeaderboard() {
 
         querySnapshot.forEach((doc) => {
             const user = doc.data();
-            // If user isn't already in the map or has a more recent score, update
+            
+            // Ensure user photoURL and username are correctly set
+            if (!user.photoURL) {
+                user.photoURL = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username || "Unknown")}`;
+            }
+
+            // Store most recent score for each user
             if (!latestScores.has(user.uid) || user.submittedAt.toMillis() > latestScores.get(user.uid).submittedAt.toMillis()) {
                 latestScores.set(user.uid, user);
             }
         });
 
-        // Sort by score (descending)
+        // Sort by highest score after filtering latest entries
         const sortedScores = Array.from(latestScores.values()).sort((a, b) => b.score - a.score);
 
         sortedScores.forEach((user) => {
@@ -30,9 +36,9 @@ async function loadLeaderboard() {
 
             userElement.innerHTML = `
                 <div class="leaderboard-row">
-                    <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username)}" 
+                    <img src="${user.photoURL}" 
                          class="leaderboard-avatar" 
-                         alt="${user.username}" />
+                         alt="${user.username || 'Unknown'}" />
                     <span class="username">${user.username || "Unknown"}</span>
                     <span class="score">${user.score} Points</span>
                 </div>
@@ -66,7 +72,17 @@ onAuthStateChanged(auth, (user) => {
 
 // Handle login button click
 window.login = function() {
-    auth.signInWithPopup(provider).then(() => {
+    auth.signInWithPopup(provider).then(async (result) => {
+        const user = result.user;
+
+        // Store user info in Firestore if not already present
+        const userRef = collection(db, "users");
+        await setDoc(doc(userRef, user.uid), {
+            username: user.displayName,
+            photoURL: user.photoURL,
+            email: user.email
+        }, { merge: true });
+
         loadLeaderboard();
     }).catch((error) => {
         console.error("Login failed:", error);

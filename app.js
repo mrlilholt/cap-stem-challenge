@@ -63,12 +63,27 @@ async function updateUserScore(points) {
     if (!auth.currentUser) return;
 
     const userScoreRef = doc(db, "scores", auth.currentUser.uid);
+    const user = auth.currentUser;  // Get current user info
+
     score += points;
 
     try {
-        await updateDoc(userScoreRef, {
+        // Update user score and metadata
+        await setDoc(userScoreRef, {
             score: score,
-            submittedAt: new Date()
+            submittedAt: new Date(),
+            username: user.displayName || "Unknown",
+            photoURL: user.photoURL || "default-avatar.png",  // Fallback to default image
+            uid: user.uid
+        });
+
+        // Log score for leaderboard collection
+        await addDoc(collection(db, "scores"), {
+            score: score,
+            submittedAt: new Date(),
+            username: user.displayName || "Unknown",
+            photoURL: user.photoURL || "default-avatar.png",
+            uid: user.uid
         });
     } catch (error) {
         console.error("Error updating score:", error);
@@ -76,6 +91,7 @@ async function updateUserScore(points) {
 
     document.getElementById("score").innerText = score;
 }
+
 
 // Load Random Mushroom and Display Difficulty Icon
 export async function loadRandomMushroom() {
