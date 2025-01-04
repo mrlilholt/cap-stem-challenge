@@ -1,6 +1,6 @@
 import { auth, provider, db } from './firebase.js';
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 let currentMushroom;
 let score = 0;
@@ -20,7 +20,7 @@ export function login() {
 
 window.login = login;
 
-// Display User Info and Fetch Score
+// Display User Info
 onAuthStateChanged(auth, (user) => {
     if (user) {
         document.getElementById("user-photo").src = user.photoURL;
@@ -29,7 +29,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Fetch and Set User Total Score from Firestore
+// Fetch and Set User Score from Firestore
 async function fetchUserScore() {
     if (!auth.currentUser) return;
 
@@ -38,31 +38,20 @@ async function fetchUserScore() {
 
     if (userScoreSnap.exists()) {
         score = userScoreSnap.data().score || 0;
+        localStorage.setItem("userScore", score);  // Store the score in localStorage
     } else {
         await setDoc(userScoreRef, { score: 0 });
         score = 0;
+        localStorage.setItem("userScore", 0);
     }
     document.getElementById("score").innerText = score;
 }
 
-// Load Random Mushroom Based on Difficulty
+// Load Random Mushroom (Cloudinary)
 export async function loadRandomMushroom() {
-    const difficulty = document.getElementById("difficulty").value;
-
     try {
-        let mushroomQuery;
-
-        if (difficulty === "random") {
-            mushroomQuery = collection(db, "mushrooms");
-        } else {
-            mushroomQuery = query(
-                collection(db, "mushrooms"),
-                where("difficulty", "==", difficulty)
-            );
-        }
-
-        const snapshot = await getDocs(mushroomQuery);
-        const mushrooms = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const snapshot = await getDocs(collection(db, "mushrooms"));
+        const mushrooms = snapshot.docs.map(doc => doc.data());
 
         if (mushrooms.length > 0) {
             currentMushroom = mushrooms[Math.floor(Math.random() * mushrooms.length)];
@@ -70,14 +59,14 @@ export async function loadRandomMushroom() {
             mushroomImageElement.src = currentMushroom.imageUrl;
             mushroomImageElement.alt = `${currentMushroom.genus} ${currentMushroom.species}`;
         } else {
-            alert("No mushrooms found for this difficulty.");
+            alert("No mushrooms found.");
         }
     } catch (error) {
         console.error("Error loading mushrooms:", error);
     }
 }
 
-// Handle Guess Submission (Use Mushroom's Points)
+// Handle Guess Submission
 export async function submitGuess() {
     const genus = document.getElementById("genus").value.toLowerCase();
     const species = document.getElementById("species").value.toLowerCase();
@@ -96,43 +85,59 @@ export async function submitGuess() {
         await updateUserScore(-1);
     }
     document.getElementById("score").innerText = score;
+    localStorage.setItem("userScore", score);  // Ensure score updates immediately in localStorage
 }
 
-// Update User Total Score and Log Submission in Firestore
+// Update User Score in Firestore
 async function updateUserScore(points) {
     if (!auth.currentUser) return;
 
     const userScoreRef = doc(db, "scores", auth.currentUser.uid);
-    
+
     try {
         const userScoreSnap = await getDoc(userScoreRef);
-        let totalScore = 0;
-
         if (userScoreSnap.exists()) {
-            totalScore = userScoreSnap.data().score;
+            await updateDoc(userScoreRef, {
+                score: score,
+                submittedAt: new Date()
+            });
+        } else {
+            await setDoc(userScoreRef, {
+                score: points,
+                submittedAt: new Date()
+            });
         }
-
-        totalScore += points;
-
-        await updateDoc(userScoreRef, {
-            score: totalScore,
-            submittedAt: new Date()
-        });
-
-        // Log the individual submission for leaderboard tracking
-        await addDoc(collection(db, "score_logs"), {
+        
+        // Log the score in the general "scores" collection for leaderboard
+        await addDoc(collection(db, "scores"), {
             score: points,
             submittedAt: new Date(),
             username: auth.currentUser.displayName || "Anonymous"
         });
-
-        // Fetch the updated score and refresh the UI
-        fetchUserScore();
 
     } catch (error) {
         console.error("Error updating score:", error);
     }
 }
 
+// Preserve Score Across Page Loads
+window.onload = () => {
+    const savedScore = localStorage.getItem("userScore");
+    if (savedScore !== null) {
+        score = parseInt(savedScore, 10);
+        document.getElementById("score").innerText = score;
+    }
+    loadRandomMushroom();
+};
+
+// Logout and Clear Score
+window.logout = () => {
+    localStorage.removeItem("userScore");  // Reset local storage on logout
+    auth.signOut().then(() => {
+        window.location.href = "index.html";
+    }).catch((error) => {
+        console.error("Logout failed:", error);
+    });
+};
+
 window.submitGuess = submitGuess;
-window.onload = loadRandomMushroom;
