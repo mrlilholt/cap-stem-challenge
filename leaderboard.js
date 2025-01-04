@@ -15,8 +15,14 @@ async function loadLeaderboard() {
 
         querySnapshot.forEach((doc) => {
             const user = doc.data();
-            
-            // Ensure user photoURL and username are correctly set
+
+            // Prioritize Authenticated User Data
+            if (user.uid === auth.currentUser?.uid) {
+                user.photoURL = auth.currentUser.photoURL;
+                user.username = auth.currentUser.displayName;
+            }
+
+            // Fallback for missing photo or username
             if (!user.photoURL) {
                 user.photoURL = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username || "Unknown")}`;
             }
