@@ -9,13 +9,15 @@
 </head>
 <body>
     <!-- Login Section (Visible if not logged in) -->
-    <div id="login-section" style="text-align: center; margin-top: 20px;">
+    <div id="login-section" class="login-section">
         <button onclick="login()" class="google-login-btn">
             <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-logo">
             Login with Google
         </button>
     </div>
-    <div class="container">
+
+    <!-- Main Container (Hidden until logged in) -->
+    <div class="container" id="main-container" style="display: none;">
         <!-- Menu Button -->
         <button class="menu-btn" onclick="toggleDropdown()">☰</button>
         
@@ -31,24 +33,23 @@
         <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
 
         <!-- User Info -->
-        <div class="user-info" id="user-info" style="display: none;">
+        <div class="user-info" id="user-info">
             <img id="user-photo" src="" alt="User Photo" class="user-photo">
             <span id="user-name"></span>
         </div>
 
         <!-- Score -->
-        <div id="score-container" style="display: none;">
+        <div id="score-container">
             Current Score: <span id="score">0</span>
         </div>
 
         <!-- Mushroom Image -->
-        <img id="mushroom-image" src="" alt="Mushroom Image" style="display: none;">
-        
+        <img id="mushroom-image" src="" alt="Mushroom Image">
         <!-- Divider -->
         <hr class="divider">
 
         <!-- Genus and Species Inputs -->
-        <div id="game-section" style="display: none;">
+        <div id="game-section">
             <input type="text" id="genus" placeholder="Genus">
             <input type="text" id="species" placeholder="Species">
             
@@ -77,7 +78,6 @@
         function toggleDropdown() {
             const dropdown = document.getElementById('menuDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-            console.log("Dropdown toggled:", dropdown.style.display);
         }
 
         // Logout Handler
@@ -90,26 +90,14 @@
         
         onAuthStateChanged(auth, (user) => {
             const loginSection = document.getElementById('login-section');
-            const userInfo = document.getElementById('user-info');
-            const gameSection = document.getElementById('game-section');
-            const scoreContainer = document.getElementById('score-container');
-            const mushroomImage = document.getElementById('mushroom-image');
-
+            const mainContainer = document.getElementById('main-container');
+            
             if (user) {
                 loginSection.style.display = 'none';
-                userInfo.style.display = 'flex';
-                gameSection.style.display = 'block';
-                scoreContainer.style.display = 'block';
-                mushroomImage.style.display = 'block';
-
-                document.getElementById('user-photo').src = user.photoURL;
-                document.getElementById('user-name').textContent = user.displayName;
+                mainContainer.style.display = 'block';
             } else {
                 loginSection.style.display = 'block';
-                userInfo.style.display = 'none';
-                gameSection.style.display = 'none';
-                scoreContainer.style.display = 'none';
-                mushroomImage.style.display = 'none';
+                mainContainer.style.display = 'none';
             }
         });
     </script>

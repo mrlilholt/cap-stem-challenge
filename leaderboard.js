@@ -1,8 +1,7 @@
-import { db, auth } from './firebase.js';
+import { db, auth, provider } from './firebase.js';
 import { collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
-// Load and Display Leaderboard Data
 async function loadLeaderboard() {
     const leaderboardContainer = document.getElementById("leaderboard-container");
     leaderboardContainer.innerHTML = ""; // Clear existing content
@@ -16,13 +15,13 @@ async function loadLeaderboard() {
 
         querySnapshot.forEach((doc) => {
             const user = doc.data();
-            // If user isn't already in the map, add their most recent score
+            // If user isn't already in the map or has a more recent score, update
             if (!latestScores.has(user.uid) || user.submittedAt.toMillis() > latestScores.get(user.uid).submittedAt.toMillis()) {
                 latestScores.set(user.uid, user);
             }
         });
 
-        // Convert map to array and sort by score
+        // Sort by score (descending)
         const sortedScores = Array.from(latestScores.values()).sort((a, b) => b.score - a.score);
 
         sortedScores.forEach((user) => {
@@ -31,7 +30,9 @@ async function loadLeaderboard() {
 
             userElement.innerHTML = `
                 <div class="leaderboard-row">
-                    <img src="https://ui-avatars.com/api/?name=${user.username}" class="leaderboard-avatar" alt="${user.username}" />
+                    <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username)}" 
+                         class="leaderboard-avatar" 
+                         alt="${user.username}" />
                     <span class="username">${user.username || "Unknown"}</span>
                     <span class="score">${user.score} Points</span>
                 </div>
@@ -72,4 +73,7 @@ window.login = function() {
     });
 };
 
-window.onload = loadLeaderboard;
+// Ensure leaderboard loads on page load
+window.onload = () => {
+    loadLeaderboard();
+};

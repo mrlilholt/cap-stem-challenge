@@ -9,8 +9,8 @@ let score = 0;
 export function login() {
     signInWithPopup(auth, provider)
         .then(() => {
-            document.getElementById("login-button").style.display = "none";
-            document.querySelector(".container").style.display = "block";  // Show game container
+            document.getElementById("login-section").style.display = "none";
+            document.getElementById("main-container").style.display = "block";
             fetchUserScore();
         })
         .catch((error) => {
@@ -20,20 +20,23 @@ export function login() {
 
 window.login = login;
 
-// Display User Info and Toggle Content
+// Display User Info and Toggle Content Based on Authentication
 onAuthStateChanged(auth, (user) => {
     const gameContainer = document.querySelector(".container");
-    const loginButton = document.getElementById("login-button");
-    
+    const loginSection = document.getElementById("login-section");
+    const userInfo = document.getElementById("user-info");
+
     if (user) {
-        document.getElementById("user-photo").src = user.photoURL;
-        document.getElementById("user-name").textContent = user.displayName;
-        loginButton.style.display = "none";
-        gameContainer.style.display = "block";  // Show game container after login
+        document.getElementById("user-photo").src = user.photoURL || 'default-avatar.png';
+        document.getElementById("user-name").textContent = user.displayName || 'Unknown User';
+        loginSection.style.display = "none";
+        gameContainer.style.display = "block";
+        userInfo.style.display = "flex"; // Show user info
         fetchUserScore();
     } else {
+        loginSection.style.display = "block";
         gameContainer.style.display = "none";
-        loginButton.style.display = "block";
+        userInfo.style.display = "none";
     }
 });
 
@@ -55,7 +58,26 @@ async function fetchUserScore() {
     document.getElementById("score").innerText = score;
 }
 
-// Load Random Mushroom (Cloudinary)
+// Update User Score in Firestore
+async function updateUserScore(points) {
+    if (!auth.currentUser) return;
+
+    const userScoreRef = doc(db, "scores", auth.currentUser.uid);
+    score += points;
+
+    try {
+        await updateDoc(userScoreRef, {
+            score: score,
+            submittedAt: new Date()
+        });
+    } catch (error) {
+        console.error("Error updating score:", error);
+    }
+
+    document.getElementById("score").innerText = score;
+}
+
+// Load Random Mushroom (from Firestore/Cloudinary)
 export async function loadRandomMushroom() {
     try {
         const snapshot = await getDocs(collection(db, "mushrooms"));
@@ -93,31 +115,7 @@ export async function submitGuess() {
         await updateUserScore(-1);
     }
     document.getElementById("score").innerText = score;
-    localStorage.setItem("userScore", score);  // Ensure score updates immediately in localStorage
-}
-
-// Update User Score in Firestore
-async function updateUserScore(points) {
-    if (!auth.currentUser) return;
-
-    const userScoreRef = doc(db, "scores", auth.currentUser.uid);
-
-    try {
-        const userScoreSnap = await getDoc(userScoreRef);
-        if (userScoreSnap.exists()) {
-            await updateDoc(userScoreRef, {
-                score: score,
-                submittedAt: new Date()
-            });
-        } else {
-            await setDoc(userScoreRef, {
-                score: points,
-                submittedAt: new Date()
-            });
-        }
-    } catch (error) {
-        console.error("Error updating score:", error);
-    }
+    localStorage.setItem("userScore", score);
 }
 
 // Preserve Score Across Page Loads
