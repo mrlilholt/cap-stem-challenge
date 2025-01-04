@@ -97,7 +97,7 @@ export async function loadRandomMushroom() {
                 case 'medium':
                     difficultyIcon.src = "medium.png";
                     break;
-                case 'difficult':
+                case 'hard':
                     difficultyIcon.src = "hard.png";
                     break;
                 default:
