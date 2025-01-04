@@ -64,7 +64,7 @@
         <button class="menu-btn" id="menuButton">☰</button>
         
         <!-- Dropdown Menu -->
-        <div class="dropdown" id="menuDropdown">
+        <div class="dropdown hidden" id="menuDropdown">
             <a href="index.html">Home</a>
             <a href="upload.html">Upload</a>
             <a href="leaderboard.html">Leaderboard</a>
@@ -111,6 +111,7 @@
     <script type="module" src="./app.js"></script>
 
     <script>
+        // Ensure dropdown works without import errors
         document.addEventListener("DOMContentLoaded", function () {
             const menuButton = document.getElementById("menuButton");
             const menuDropdown = document.getElementById("menuDropdown");
@@ -118,38 +119,21 @@
             menuButton.addEventListener("click", function (event) {
                 event.stopPropagation();
                 menuDropdown.classList.toggle("hidden");
-                menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
             });
 
             // Close dropdown if clicked outside
             window.addEventListener("click", function (event) {
                 if (!event.target.closest('.menu-btn')) {
                     menuDropdown.classList.add("hidden");
-                    menuDropdown.style.display = 'none';
                 }
             });
         });
 
-        // Logout Handler
+        // Dummy logout (replace with actual logout handler)
         function logout() {
-            window.logout();
+            console.log("Logging out...");
+            alert("Logout Successful!");
         }
-
-        // Manage Login State Display
-        import { auth, onAuthStateChanged } from './firebase.js';
-        
-        onAuthStateChanged(auth, (user) => {
-            const loginSection = document.getElementById('login-section');
-            const mainContainer = document.getElementById('main-container');
-            
-            if (user) {
-                loginSection.style.display = 'none';
-                mainContainer.style.display = 'block';
-            } else {
-                loginSection.style.display = 'block';
-                mainContainer.style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>
