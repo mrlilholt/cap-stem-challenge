@@ -55,12 +55,13 @@
 <body>
     <!-- Login Section (Visible if not logged in) -->
     <div id="login-section" class="login-section">
-        <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
-
-        <button onclick="login()" class="google-login-btn">
-            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-logo">
-            Login with Google
-        </button>
+        <div class="login-container">
+            <img src="cap-stem-logo.png" alt="Cap & Stem Logo" class="logo">
+            <button onclick="login()" class="google-login-btn">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-logo">
+                Login with Google
+            </button>
+        </div>
     </div>
 
     <!-- Main Container (Hidden until logged in) -->
