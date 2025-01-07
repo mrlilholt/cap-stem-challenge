@@ -21,9 +21,10 @@ body, html {
 }
 
 .menu-btn {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 20px;
+    z-index: 1000; /* Ensure it's always above the content */
     font-size: 24px;
     border: none;
     background: none;
@@ -145,4 +146,31 @@ button {
 
 .score {
     font-size: 18px;
+}
+.google-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.google-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+/* Center the login section vertically and horizontally */
+#login-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
 }
