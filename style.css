@@ -16,8 +16,10 @@ body, html {
 
 .logo {
     max-width: 130px;
-    margin: 10px auto;
     display: block;
+    margin: 0 auto;
+    padding-top: 60px; 
+    margin-bottom: 20px;  /* Space between logo and button */
 }
 
 .menu-btn {
@@ -173,4 +175,14 @@ button {
     align-items: center;
     height: 100vh;
     text-align: center;
+}
+
+@media (max-width: 768px) {
+    .menu-btn {
+        top: 10px;
+        right: 10px;
+    }
+    .logo {
+        padding-top: 80px;  /* More spacing on smaller screens */
+    }
 }
