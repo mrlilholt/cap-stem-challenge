@@ -8,7 +8,18 @@ let score = 0;
 // Google Login
 export function login() {
     signInWithPopup(auth, provider)
-        .then(() => {
+        .then(async (result) => {
+            const user = result.user;
+
+            // Store user info in Firestore after login
+            const userRef = doc(db, "users", user.uid);
+            await setDoc(userRef, {
+                username: user.displayName || "Unknown",
+                photoURL: user.photoURL || "default-avatar.png",
+                email: user.email
+            }, { merge: true });  // Merge to avoid overwriting
+
+            // Update UI
             document.getElementById("login-section").style.display = "none";
             document.getElementById("main-container").style.display = "block";
             fetchUserScore();
@@ -17,6 +28,7 @@ export function login() {
             console.error("Login failed:", error);
         });
 }
+
 
 window.login = login;
 
@@ -90,8 +102,8 @@ async function updateUserScore(points) {
     } catch (error) {
         console.error("Error updating score:", error);
     }
-    loadLeaderboard();
 }
+
 
 
 
